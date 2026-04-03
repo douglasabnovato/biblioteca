@@ -1,0 +1,212 @@
+[
+    {
+        "titulo": "Mad Max: Estrada da Fúria",
+        "descricao": "Em um mundo pós-apocalíptico, Max se une a Furiosa para fugir de um tirano em uma perseguição intensa.",
+        "imagem": "./assets/madmax.jpg",
+        "tipo": "Filme",
+        "categoria": "Ação"
+    },
+    {
+        "titulo": "Velozes e Furiosos",
+        "descricao": "Pilotos de rua se envolvem em corridas ilegais e se unem para enfrentar criminosos perigosos.",
+        "imagem": "./assets/velozesefuriosos.jpg",
+        "tipo": "Filme",
+        "categoria": "Ação"
+    },
+    {
+        "titulo": "John Wick",
+        "descricao": "Um ex-assassino profissional retorna ao mundo do crime em busca de vingança.",
+        "imagem": "./assets/johnwick.jpg",
+        "tipo": "Filme",
+        "categoria": "Ação"
+    },
+    {
+        "titulo": "O Código Da Vinci",
+        "descricao": "Um simbologista corre contra o tempo para desvendar um mistério ligado ao Santo Graal.",
+        "imagem": "./assets/codigovinci.jpg",
+        "tipo": "Livro",
+        "categoria": "Ação"
+    },
+    {
+        "titulo": "Jogos Vorazes",
+        "descricao": "Jovens são forçados a lutar até a morte em um reality show controlado por um governo autoritário.",
+        "imagem": "./assets/jogosvorazes.jpg",
+        "tipo": "Livro",
+        "categoria": "Ação"
+    },
+    {
+        "titulo": "A Identidade Bourne",
+        "descricao": "Um homem sem memória tenta descobrir quem é enquanto foge de assassinos.",
+        "imagem": "./assets/bourne.jpg",
+        "tipo": "Livro",
+        "categoria": "Ação"
+    },
+    {
+        "titulo": "As Branquelas",
+        "descricao": "Dois agentes do FBI se disfarçam de socialites para resolver um caso.",
+        "imagem": "./assets/asbranquelas.jpg",
+        "tipo": "Filme",
+        "categoria": "Comédia"
+    },
+    {
+        "titulo": "Free Guy",
+        "descricao": "Um caixa de banco descobre que é um personagem dentro de um videogame e decide se tornar o herói da própria história.",
+        "imagem": "./assets/freeguy.jpg",
+        "tipo": "Filme",
+        "categoria": "Comédia"
+    },
+    {
+        "titulo": "Um Espião e Meio",
+        "descricao": "Um agente da CIA e um vendedor de seguros são forçados a trabalhar juntos para salvar o mundo em uma missão improvável e cheia de humor.",
+        "imagem": "./assets/umespiaoemeio.jpg",
+        "tipo": "Filme",
+        "categoria": "Comédia"
+    },
+    {
+        "titulo": "O Guia do Mochileiro das Galáxias",
+        "descricao": "Uma sátira divertida sobre a vida, o universo e tudo mais.",
+        "imagem": "./assets/mochileiro.jpg",
+        "tipo": "Livro",
+        "categoria": "Comédia"
+    },
+    {
+        "titulo": "Diário de um Banana",
+        "descricao": "As confusões de um garoto tentando sobreviver à escola.",
+        "imagem": "./assets/banana.jpg",
+        "tipo": "Livro",
+        "categoria": "Comédia"
+    },
+    {
+        "titulo": "Bom Dia, Camaradas",
+        "descricao": "Uma visão leve e engraçada da infância em Angola.",
+        "imagem": "./assets/camaradas.jpg",
+        "tipo": "Livro",
+        "categoria": "Comédia"
+    },
+    {
+        "titulo": "Maze Runner",
+        "descricao": "Um grupo de jovens tenta escapar de um labirinto mortal enquanto descobrem a verdade sobre o experimento em que estão envolvidos.",
+        "imagem": "./assets/mazerunner.jpg",
+        "tipo": "Filme",
+        "categoria": "Ficção Científica"
+    },
+    {
+        "titulo": "Interestelar",
+        "descricao": "Astronautas viajam pelo espaço em busca de um novo lar para a humanidade.",
+        "imagem": "./assets/interestelar.jpg",
+        "tipo": "Filme",
+        "categoria": "Ficção Científica"
+    },
+    {
+        "titulo": "Percy Jackson e O Ladrão de Raios",
+        "descricao": "Percy Jackson descobre ser filho de Poseidon e é acusado de roubar o raio de Zeus.",
+        "imagem": "./assets/percyFilme.jpg",
+        "tipo": "Filme",
+        "categoria": "Ficção Científica"
+    },
+    {
+        "titulo": "1984",
+        "descricao": "Uma sociedade controlada por vigilância extrema e manipulação da verdade.",
+        "imagem": "./assets/1984.jpg",
+        "tipo": "Livro",
+        "categoria": "Ficção Científica"
+    },
+    {
+        "titulo": "Duna",
+        "descricao": "Disputas políticas e religiosas em um planeta desértico vital para o universo.",
+        "imagem": "./assets/duna.jpg",
+        "tipo": "Livro",
+        "categoria": "Ficção Científica"
+    },
+    {
+        "titulo": "Percy Jackson - O Ladrão de Raios",
+        "descricao": "Primeiro volume da saga Percy Jackson e os Olimpianos.",
+        "imagem": "./assets/percyLivro.jpg",
+        "tipo": "Livro",
+        "categoria": "Ficção Científica"
+    },
+    {
+        "titulo": "Como Se Fosse a Primeira Vez",
+        "descricao": "Um homem se apaixona por uma mulher com perda de memória recente e precisa conquistar seu coração todos os dias.",
+        "imagem": "./assets/primeiravez.jpg",
+        "tipo": "Filme",
+        "categoria": "Romance"
+    },
+    {
+        "titulo": "Te Amarei para Sempre",
+        "descricao": "Um romance que atravessa o tempo, mostrando o poder duradouro do amor verdadeiro.",
+        "imagem": "./assets/teamareiparasiempre.jpg",
+        "tipo": "Filme",
+        "categoria": "Romance"
+    },
+    {
+        "titulo": "Para Todos os Garotos que Já Amei",
+        "descricao": "A história de Lara Jean e suas cartas de amor secretas, que transformam sua vida amorosa de repente.",
+        "imagem": "./assets/paratodososgarotosquejaamei.jpg",
+        "tipo": "Filme",
+        "categoria": "Romance"
+    },
+    {
+        "titulo": "Orgulho e Preconceito",
+        "descricao": "Amor e conflitos sociais na Inglaterra do século XIX.",
+        "imagem": "./assets/orgulhoepreconceito.jpg",
+        "tipo": "Livro",
+        "categoria": "Romance"
+    },
+    {
+        "titulo": "Como Eu Era Antes de Você",
+        "descricao": "Um romance emocionante sobre escolhas difíceis.",
+        "imagem": "./assets/antesdevoce.jpg",
+        "tipo": "Livro",
+        "categoria": "Romance"
+    },
+    {
+        "titulo": "O Morro dos Ventos Uivantes",
+        "descricao": "Uma história intensa de amor e obsessão.",
+        "imagem": "./assets/ventosuivantes.jpg",
+        "tipo": "Livro",
+        "categoria": "Romance"
+    },
+    {
+        "titulo": "Silent Hill",
+        "descricao": "Uma mãe busca sua filha desaparecida em uma cidade envolta em névoa e pesadelos.",
+        "imagem": "./assets/silenthill.jpg",
+        "tipo": "Filme",
+        "categoria": "Terror"
+    },
+    {
+        "titulo": "O Chamado",
+        "descricao": "Uma fita de vídeo amaldiçoada causa mortes misteriosas a quem a assiste.",
+        "imagem": "./assets/ochamado.jpg",
+        "tipo": "Filme",
+        "categoria": "Terror"
+    },
+    {
+        "titulo": "Horror em Amityville",
+        "descricao": "Uma família enfrenta eventos sobrenaturais aterrorizantes após se mudar para uma casa mal-assombrada.",
+        "imagem": "./assets/horroramityville.jpg",
+        "tipo": "Filme",
+        "categoria": "Terror"
+    },
+    {
+        "titulo": "It: A Coisa",
+        "descricao": "Uma entidade maligna aterroriza uma cidade a cada 27 anos.",
+        "imagem": "./assets/itacoisa.jpg",
+        "tipo": "Livro",
+        "categoria": "Terror"
+    },
+    {
+        "titulo": "O Iluminado",
+        "descricao": "Um hotel isolado desperta a loucura em um homem.",
+        "imagem": "./assets/oiluminado.jpg",
+        "tipo": "Livro",
+        "categoria": "Terror"
+    },
+    {
+        "titulo": "Drácula",
+        "descricao": "O clássico conto do vampiro mais famoso da literatura.",
+        "imagem": "./assets/dracula.jpg",
+        "tipo": "Livro",
+        "categoria": "Terror"
+    }
+]

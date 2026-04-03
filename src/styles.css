@@ -1,0 +1,131 @@
+.stApp {
+    background-color: #dfcef1;
+
+}
+
+/* Esconde a barra superior do Streamlit (Deploy, menu, etc) */
+header {
+    visibility: hidden;
+    height: 0;
+}
+
+.nav-custom {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 999999;
+    width: 100%;
+    padding: 1rem 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #333;
+}
+
+/* Itens da navbar */
+.nav-item {
+    flex: 1;
+    text-align: center;
+}
+
+.nav-item a {
+    color: #ffffff !important;
+    text-decoration: none !important;
+    font-family: Arial, sans-serif;
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+}
+
+.nav-item a:hover {
+    color: #7923d4 !important;
+}
+
+/* Evita que o conteúdo fique escondido atrás da navbar fixa */
+.content-wrapper {
+    padding-top: 80px; /* altura da navbar */
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+/* Inputs de texto */
+div[data-baseweb="input"]:focus-within {
+    border-color: #7923d4;           /* mesma cor da borda do select */
+    box-shadow: 0 0 5px #771fd4; 
+    outline: none;
+    border-radius: 8px;
+}
+
+/* Input interno */
+div[data-baseweb="input"] input {
+    padding: 8px;
+    font-size: 16px;
+    background-color: #dfcef1;
+    border: 2px solid #7923d4;
+    border-radius: 8px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    outline: none;
+}
+
+div[data-baseweb="input"] input:focus {
+    box-shadow: none;
+}
+
+/* Selectbox */
+div[data-baseweb="select"] > div {
+    border-radius: 8px;
+    border: 2px solid #7923d4;
+    background-color: #dfcef1;
+}
+
+div[data-baseweb="select"]:focus-within > div {
+    border-color: #7923d4;
+    box-shadow: 0 0 5px #771fd4;
+}
+
+.card {
+    width: 330px;
+    height: 230px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+img {
+    height: 450px;
+}
+
+/* --- SINCRONIZAÇÃO TOTAL: BUSCA IGUAL AO SELECT --- */
+
+/* 1. O Contêiner Externo (A Moldura) */
+div[data-testid="stVerticalBlock"] > div:has(iframe[title="st_keyup.st_keyup"]) {
+    height: 42px !important; /* Altura exata para bater com o select do Streamlit */
+    min-height: 42px !important;
+    background-color: #dfcef1 !important; /* Mesma cor do fundo do app */
+    border: 2px solid #7923d4 !important;  /* Roxo da sua identidade */
+    border-radius: 8px;
+    padding: 0 !important;
+    overflow: hidden !important;
+    display: flex;
+    align-items: center;
+    transition: all 0.2s ease;
+}
+
+/* 2. O Efeito de Foco (Igual ao seu Select) */
+div[data-testid="stVerticalBlock"] > div:has(iframe[title="st_keyup.st_keyup"]):focus-within {
+    border-color: #7923d4 !important;
+    box-shadow: 0 0 5px #771fd4;
+}
+
+/* 3. Limpeza Radical no Iframe (Onde mora o fundo branco e a borda vermelha) */
+iframe[title="st_keyup.st_keyup"] {
+    height: 85px!important;
+    width: calc(100% + 20px) !important; 
+    margin-left: -10px !important;
+    background-color: transparent !important; /* Remove fundo branco */
+    border: none !important;                  /* Remove a borda vermelha teimosa */
+    margin-top: 8px;                         /* Sobe o input para esconder a label vazia */
+    filter: brightness(1.1);                   /* Ajuste fino de claridade */
+    mix-blend-mode: multiply;                  /* TRUQUE: Faz o branco do iframe virar o roxo de trás */
+}
