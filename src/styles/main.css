@@ -1,0 +1,219 @@
+/* Importando a fonte Google Fonts (Inter) para um visual ultra limpo e moderno */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --bg-app: #120d1c;
+    --bg-card: #1c152e;
+    --border-glow: #7923d4;
+    --border-subtle: #3a2759;
+    --text-main: #f3eff9;
+    --text-muted: #ab9bc2;
+    --accent-purple: #9d4edd;
+    --accent-hover: #b565ff;
+}
+
+.stApp {
+    background: linear-gradient(135deg, #120d1c 0%, #1a1128 100%);
+    color: var(--text-main);
+    font-family: 'Inter', sans-serif;
+}
+
+/* Esconde a barra superior padrão do Streamlit */
+header {
+    visibility: hidden;
+    height: 0;
+}
+
+/* --- NAVBAR FIXA MODERNA (Glassmorphism) --- */
+.nav-custom {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 999999;
+    width: 100%;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    align-items: center;
+    background: rgba(28, 21, 46, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border-subtle);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.nav-item a {
+    color: var(--text-main) !important;
+    text-decoration: none !important;
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    padding: 6px 12px;
+    border-radius: 8px;
+}
+
+.nav-item a:hover {
+    color: #ffffff !important;
+    background-color: rgba(121, 35, 212, 0.25);
+    box-shadow: 0 0 12px rgba(121, 35, 212, 0.4);
+}
+
+/* Garante que o conteúdo não fique escondido sob a navbar fixa */
+.content-wrapper {
+    padding-top: 90px;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
+
+/* --- INPUTS E SELECTBOX REFINADOS --- */
+div[data-baseweb="input"]:focus-within,
+div[data-baseweb="select"]:focus-within > div {
+    border-color: var(--accent-hover) !important;
+    box-shadow: 0 0 12px rgba(157, 78, 221, 0.35) !important;
+    outline: none;
+}
+
+div[data-baseweb="input"] input {
+    padding: 10px 14px;
+    font-size: 15px;
+    background-color: rgba(28, 21, 46, 0.6);
+    color: var(--text-main);
+    border: 2px solid var(--border-subtle);
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+div[data-baseweb="select"] > div {
+    border-radius: 10px;
+    border: 2px solid var(--border-subtle);
+    background-color: rgba(28, 21, 46, 0.6);
+    color: var(--text-main);
+}
+
+/* --- CARDS DE FILMES E LIVROS (Elegantes e Fluidos) --- */
+.card {
+    width: 100%;
+    min-height: 240px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 14px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+    margin-bottom: 24px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(121, 35, 212, 0.25);
+    border-color: var(--border-glow);
+}
+
+.card h3 {
+    font-size: 1.15rem;
+    color: var(--text-main);
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.card p {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin-bottom: 14px;
+}
+
+/* Badge de Categoria/Tipo */
+.badge {
+    align-self: flex-start;
+    padding: 4px 10px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-radius: 20px;
+    background: rgba(121, 35, 212, 0.2);
+    color: #d1b3ff;
+    border: 1px solid rgba(121, 35, 212, 0.4);
+}
+
+.badge.livro {
+    background: rgba(163, 113, 247, 0.15);
+    color: #c4a7ff;
+    border: 1px solid rgba(163, 113, 247, 0.3);
+}
+
+/* Imagens dos Cards com Proporção Perfeita */
+img {
+    width: 100%;
+    height: 340px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease;
+}
+
+.card:hover img {
+    transform: scale(1.02);
+}
+
+/* --- SINCRONIZAÇÃO PERFEITA DO ST_KEYUP --- */
+div[data-testid="stVerticalBlock"] > div:has(iframe[title="st_keyup.st_keyup"]) {
+    height: 46px !important;
+    min-height: 46px !important;
+    background-color: rgba(28, 21, 46, 0.6) !important;
+    border: 2px solid var(--border-subtle) !important;
+    border-radius: 10px;
+    padding: 0 !important;
+    overflow: hidden !important;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+div[data-testid="stVerticalBlock"] > div:has(iframe[title="st_keyup.st_keyup"]):focus-within {
+    border-color: var(--accent-hover) !important;
+    box-shadow: 0 0 12px rgba(157, 78, 221, 0.35);
+}
+
+iframe[title="st_keyup.st_keyup"] {
+    height: 90px !important;
+    width: calc(100% + 20px) !important;
+    margin-left: -10px !important;
+    background-color: transparent !important;
+    border: none !important;
+    margin-top: 6px;
+    filter: brightness(1.2);
+    mix-blend-mode: luminosity;
+}
+
+/* --- RESPONSIVIDADE MOBILE --- */
+@media (max-width: 768px) {
+    .nav-custom {
+        padding: 0.8rem 1rem;
+        gap: 20px;
+    }
+    
+    .nav-item a {
+        font-size: 0.9rem;
+    }
+
+    .content-wrapper {
+        padding-top: 80px;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    img {
+        height: 260px;
+    }
+}

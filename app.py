@@ -3,17 +3,18 @@ from PIL import Image
 from st_keyup import st_keyup
 from src.backend import buscar_dados
 
+# Configuração da página em modo wide
 st.set_page_config(layout="wide", page_title="Cine&Livro")
 
-# Carregar CSS (Frontend)
-with open("src/styles.css") as f:
+# Carregar CSS atualizado da nova estrutura (Fase 1 e Fase 2)
+with open("src/styles/main.css") as f:
     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
-# Navegação e busca
+# Navegação e busca via parâmetros de URL
 query_params = st.query_params
 navegacao = query_params.get("p", "Home")
 
-# Navbar HTML
+# Navbar HTML Fixa Superior (Glassmorphism)
 st.markdown(f"""
     <div class="nav-custom">
         <div class="nav-item"><a href="/?p=Home" target="_self">Home</a></div>
@@ -22,35 +23,33 @@ st.markdown(f"""
     </div>
 """, unsafe_allow_html=True)
 
-st.title("🎬📚 Cine&Livro")
-
-# Adicione este container para garantir o espaçamento correto
+# Container principal para compensar a navbar fixa
 st.markdown('<div class="content-wrapper">', unsafe_allow_html=True)
 
-# A mágica acontece aqui:
+st.title("🎬📚 Cine&Livro")
+
+# Campo de busca em tempo real com st_keyup
 search = st_keyup(
     label="Pesquisar...", 
-    placeholder="🔍 Pesquisar...", 
+    placeholder="🔍 Pesquisar por título...", 
     key="search_input",
     label_visibility="collapsed" 
 )
 
-st.markdown('</div>', unsafe_allow_html=True)
-
-# Filtro de categoria (Frontend UI)
+# Filtro de categoria condicional (UI)
 categoria_sel = "Todas"
 if navegacao != "Home":
     categorias = ["Todas", "Ação", "Comédia", "Ficção Científica", "Romance", "Terror"]
     categoria_sel = st.selectbox("Filtrar por categoria", categorias)
 
-# CHAMADA AO BACKEND
+# Chamada ao Backend centralizado
 itens = buscar_dados(tipo=navegacao, categoria=categoria_sel, busca=search)
 
-# Renderização dos Cards (Frontend)
 st.divider()
 
+# Renderização dos Cards (Frontend Responsivo)
 if itens:
-    # 1. Agrupar itens por categoria
+    # 1. Agrupar itens por categoria encontrada
     categorias_encontradas = {}
     for item in itens:
         cat = item['categoria']
@@ -58,27 +57,36 @@ if itens:
             categorias_encontradas[cat] = []
         categorias_encontradas[cat].append(item)
 
-    # 2. Iterar sobre cada categoria e criar o cabeçalho
+    # 2. Iterar sobre cada categoria para criar as seções
     for categoria, lista_itens in categorias_encontradas.items():
-        st.subheader(f"{categoria}")
+        st.subheader(f"📌 {categoria}")
         
-        # 3. Renderizar os cards em colunas (3 por linha)
+        # 3. Renderizar os cards em colunas (3 por linha) com responsividade
         for i in range(0, len(lista_itens), 3):
             cols = st.columns(3)
             for j, item in enumerate(lista_itens[i:i+3]):
                 with cols[j]:
-                    # Verificação de segurança para imagem
+                    # Exibição segura da imagem com o padrão atualizado
                     if item.get('imagem'):
-                        st.image(item['imagem'], use_container_width=True)
+                        st.image(item['imagem'], width='stretch')
                     
+                    # Definição de classe dinâmica para a badge baseada no tipo
+                    tipo_item = item.get('tipo', 'Filme')
+                    badge_class = "badge livro" if tipo_item == "Livro" else "badge"
+                    
+                    # Renderização estruturada do Card HTML
                     st.markdown(f"""
                     <div class="card">
-                        <h3>{item['titulo']}</h3>
-                        <p>{item['descricao']}</p>
-                        <span class="badge">{item['tipo']}</span>
+                        <div>
+                            <h3>{item['titulo']}</h3>
+                            <p>{item['descricao']}</p>
+                        </div>
+                        <span class="{badge_class}">{tipo_item}</span>
                     </div>
                     """, unsafe_allow_html=True)
         
         st.write("---") 
 else:
     st.info(f"Nenhum resultado encontrado para: '{search}'")
+
+st.markdown('</div>', unsafe_allow_html=True)
