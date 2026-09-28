@@ -1,3 +1,4 @@
+/* Tema escuro do Cine&Livro: navbar fixa, cards e filtros (contraste AA e foco visível) */
 /* Importando a fonte Google Fonts (Inter) para um visual ultra limpo e moderno */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
@@ -43,7 +44,7 @@ header {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
-.nav-item a {
+.nav-custom a {
     color: var(--text-main) !important;
     text-decoration: none !important;
     font-family: 'Inter', sans-serif;
@@ -55,7 +56,8 @@ header {
     border-radius: 8px;
 }
 
-.nav-item a:hover {
+.nav-custom a:hover,
+.nav-custom a[aria-current="page"] {
     color: #ffffff !important;
     background-color: rgba(121, 35, 212, 0.25);
     box-shadow: 0 0 12px rgba(121, 35, 212, 0.4);
@@ -203,7 +205,7 @@ iframe[title="st_keyup.st_keyup"] {
         gap: 20px;
     }
     
-    .nav-item a {
+    .nav-custom a {
         font-size: 0.9rem;
     }
 
@@ -217,3 +219,23 @@ iframe[title="st_keyup.st_keyup"] {
         height: 260px;
     }
 }
+
+/* Capa dentro do card (com texto alternativo) */
+.card .capa {
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    display: block;
+}
+
+:focus-visible {
+    outline: 3px solid #ffd166 !important;
+    outline-offset: 2px;
+}
+/* Rótulos dos campos legíveis no tema escuro */
+[data-testid="stWidgetLabel"], [data-testid="stWidgetLabel"] p, label {
+    color: var(--text-muted) !important;
+}
+/* Fim de main.css */

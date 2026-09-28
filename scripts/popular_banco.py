@@ -1,39 +1,49 @@
-import sqlite3
+"""Recria database/cine_livro.db a partir de scripts/itens.json (funciona de qualquer pasta; antes procurava itens.json na raiz)."""
 import json
-import os
+import sqlite3
+from pathlib import Path
 
-# Garante que a pasta database existe
-os.makedirs('database', exist_ok=True)
+RAIZ = Path(__file__).resolve().parent.parent
+JSON = Path(__file__).resolve().parent / "itens.json"
+DB = RAIZ / "database" / "cine_livro.db"
+CAMPOS = ("titulo", "descricao", "imagem", "tipo", "categoria")
 
-# Lê os dados diretamente do arquivo itens.json da raiz
-if os.path.exists('itens.json'):
-    with open('itens.json', 'r', encoding='utf-8') as f:
-        dados = json.load(f)
-else:
-    raise FileNotFoundError("O arquivo itens.json não foi encontrado na raiz do projeto.")
 
-conn = sqlite3.connect('database/cine_livro.db')
-cursor = conn.cursor()
+def carregar(caminho=JSON):
+    """Lê e valida os itens: campos obrigatórios, tipo Filme/Livro e imagem existente."""
+    itens = json.loads(Path(caminho).read_text(encoding="utf-8"))
+    erros = []
+    for n, item in enumerate(itens, 1):
+        faltando = [c for c in CAMPOS if not str(item.get(c, "")).strip()]
+        if faltando:
+            erros.append(f"item {n}: faltando {', '.join(faltando)}")
+        elif item["tipo"] not in ("Filme", "Livro"):
+            erros.append(f"item {n}: tipo inválido '{item['tipo']}'")
+        elif not (RAIZ / item["imagem"]).is_file():
+            erros.append(f"item {n}: imagem não encontrada {item['imagem']}")
+    if erros:
+        raise ValueError("itens.json inválido:\n" + "\n".join(erros))
+    return itens
 
-# Recria a tabela para garantir que está limpa
-cursor.execute('DROP TABLE IF EXISTS itens')
-cursor.execute('''
-    CREATE TABLE itens (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        titulo TEXT,
-        descricao TEXT,
-        imagem TEXT,
-        tipo TEXT,
-        categoria TEXT
-    )
-''')
 
-for item in dados:
-    cursor.execute('''
-        INSERT INTO itens (titulo, descricao, imagem, tipo, categoria)
-        VALUES (?, ?, ?, ?, ?)
-    ''', (item['titulo'], item['descricao'], item['imagem'], item['tipo'], item['categoria']))
+def popular(itens, destino=DB):
+    """Recria a tabela e insere os itens em uma transação."""
+    Path(destino).parent.mkdir(parents=True, exist_ok=True)
+    with sqlite3.connect(destino) as conn:
+        conn.execute("DROP TABLE IF EXISTS itens")
+        conn.execute(
+            "CREATE TABLE itens (id INTEGER PRIMARY KEY AUTOINCREMENT, titulo TEXT NOT NULL, descricao TEXT NOT NULL,"
+            " imagem TEXT NOT NULL, tipo TEXT NOT NULL CHECK (tipo IN ('Filme','Livro')), categoria TEXT NOT NULL)"
+        )
+        conn.execute("CREATE INDEX idx_itens_tipo_categoria ON itens (tipo, categoria)")
+        conn.executemany(
+            "INSERT INTO itens (titulo, descricao, imagem, tipo, categoria) VALUES (?, ?, ?, ?, ?)",
+            [tuple(i[c] for c in CAMPOS) for i in itens],
+        )
+    return len(itens)
 
-conn.commit()
-conn.close()
-print("Banco de dados populado com sucesso a partir do itens.json!")
+
+if __name__ == "__main__":
+    total = popular(carregar())
+    print(f"Banco gerado em {DB.relative_to(RAIZ)} com {total} itens.")
+# Fim de popular_banco.py

@@ -2,6 +2,12 @@
 
 Uma experiência imersiva e moderna para descoberta e recomendação centralizada de filmes e livros, combinando alta performance, design elegante e interatividade em tempo real.
 
+## 🚀 Em produção
+
+- URL: https://cinelivro.streamlit.app (sugerida; confirme a escolhida no Streamlit)
+- Hospedagem: Streamlit Community Cloud (gratuito), republica a cada push na `main`
+- Passo a passo: [docs/DEPLOY.md](docs/DEPLOY.md)
+
 ---
 
 ## 🌟 Sobre o Projeto
@@ -29,10 +35,38 @@ O projeto foi construído seguindo rigorosos padrões de separação de responsa
 
 ---
 
+## ▶️ Como executar
+
+```bash
+python -m venv .venv
+.venv\Scripts\activate          # Windows (Linux/macOS: source .venv/bin/activate)
+pip install -r requirements-dev.txt
+python scripts/popular_banco.py   # (re)gera database/cine_livro.db a partir de scripts/itens.json
+streamlit run app.py              # http://localhost:8501
+pytest                            # 11 testes (dados, carga, HTML e interface)
+```
+
+Para adicionar um título: inclua-o em `scripts/itens.json` (a capa vai em `assets/`) e rode o script de carga — ele avisa se faltar campo ou imagem.
+
+**Publicação gratuita:** [Streamlit Community Cloud](https://streamlit.io/cloud) → Create app → este repositório, branch `main`, `app.py`, Python 3.12 em Advanced settings. Passo a passo em [docs/DEPLOY.md](docs/DEPLOY.md).
+
+## ✅ Versão 1.1 (revisão de qualidade)
+
+- Busca sem diferenciar acentos e maiúsculas ("dracula" encontra "Drácula")
+- Categorias lidas do banco; página inválida volta para o Início
+- Conteúdo dos cards com escape de HTML; banco aberto em modo leitura
+- Capas com texto alternativo, rótulos legíveis e foco visível (axe-core sem violações)
+- Script de carga único e funcional (os dois anteriores procuravam o JSON no lugar errado)
+- 11 testes automatizados; dependências reduzidas a `streamlit` e `streamlit-keyup`
+
+Detalhes em [docs/ANALISE.md](docs/ANALISE.md), [docs/ARQUITETURA.md](docs/ARQUITETURA.md) e [docs/PLANO-DE-ACAO.md](docs/PLANO-DE-ACAO.md).
+
+---
+
 ## 🚀 Contribuições e Próximos Passos
 
 Este ecossistema está em constante evolução. Contribuições futuras são bem-vindas nas seguintes frentes:
 
 * **Design do Footer:** Aprimoramento visual e estrutural do rodapé da aplicação.
 * **Botão CTA em Destaque:** Implementação de chamada para ação na seção inicial para engajamento do usuário.
-* **QA de Responsividade:** Validação e refinamento contínuo da experiência em dispositivos móveis.
+* **QA de Responsividade:** Validação e refinamento contínuo da experiência em dispositivos móveis.
