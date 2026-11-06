@@ -4,7 +4,7 @@ import json
 import pytest
 
 from scripts.popular_banco import carregar, popular
-from src.backend import buscar_dados, listar_categorias, normalizar
+from src.backend import buscar_dados, chave_obra, listar_categorias, normalizar, pares_adaptacao
 from src.render import card_html
 
 
@@ -60,3 +60,24 @@ def test_carga_recusa_item_invalido(tmp_path):
     with pytest.raises(ValueError, match="faltando descricao"):
         carregar(arquivo)
 # Fim de test_backend.py
+
+
+def test_chave_obra_ignora_pontuacao_e_conectores():
+    assert chave_obra("Percy Jackson e O Ladrão de Raios") == chave_obra("Percy Jackson - O Ladrão de Raios")
+    assert chave_obra("Duna") != chave_obra("Drácula")
+
+
+def test_pares_adaptacao_liga_filme_e_livro_em_qualquer_ordem(db):
+    itens = buscar_dados(db_path=db)
+    for lista in (itens, list(reversed(itens))):
+        pares = pares_adaptacao(lista)
+        assert len(pares) == 2
+        assert sorted(p["tipo"] for p in pares.values()) == ["Filme", "Livro"]
+        assert all("Percy Jackson" in p["titulo"] for p in pares.values())
+
+
+def test_card_mostra_a_obra_no_outro_formato_com_escape():
+    item = {"titulo": "X", "descricao": "d", "tipo": "Filme", "imagem": ""}
+    html_card = card_html(item, {"tipo": "Livro", "titulo": "<b>Y</b>"})
+    assert "Também em livro: &lt;b&gt;Y&lt;/b&gt;" in html_card
+    assert "Também em" not in card_html(item)

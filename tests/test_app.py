@@ -31,6 +31,13 @@ def test_pagina_de_livros_tem_filtro_com_categorias_do_banco():
     assert [s.value for s in at.subheader] == ["Terror"]
 
 
+def test_home_mostra_adaptacao_entre_filme_e_livro():
+    at = rodar()
+    textos = " ".join(m.value for m in at.markdown)
+    assert "Também em livro: Percy Jackson - O Ladrão de Raios" in textos
+    assert "Também em filme: Percy Jackson e O Ladrão de Raios" in textos
+
+
 def test_pagina_invalida_volta_para_home():
     at = rodar("<script>")
     assert at.title[0].value == "Cine&Livro"
