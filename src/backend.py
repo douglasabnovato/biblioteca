@@ -48,4 +48,25 @@ def listar_categorias(tipo=None, db_path=DB_PATH):
         params.append(tipo)
     with conectar(db_path) as conn:
         return [r[0] for r in conn.execute(query + " ORDER BY categoria", params).fetchall()]
+CONECTORES = {"e", "o", "a", "os", "as", "de", "do", "da"}
+
+
+def chave_obra(titulo):
+    """Chave para achar a mesma obra em filme e livro: sem acento, pontuação e conectores."""
+    palavras = "".join(c if c.isalnum() else " " for c in normalizar(titulo)).split()
+    return " ".join(p for p in palavras if p not in CONECTORES)
+
+
+def pares_adaptacao(itens):
+    """Para cada id, o título da mesma obra no outro formato (livro que virou filme, e o contrário)."""
+    por_chave = {}
+    for item in itens:
+        por_chave.setdefault(chave_obra(item["titulo"]), []).append(item)
+    pares = {}
+    for grupo in por_chave.values():
+        for item in grupo:
+            outro = next((o for o in grupo if o["tipo"] != item["tipo"]), None)
+            if outro:
+                pares[item["id"]] = {"tipo": outro["tipo"], "titulo": outro["titulo"]}
+    return pares
 # Fim de backend.py
