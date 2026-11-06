@@ -4,7 +4,7 @@ import html
 import streamlit as st
 from st_keyup import st_keyup
 
-from src.backend import buscar_dados, listar_categorias
+from src.backend import buscar_dados, listar_categorias, pares_adaptacao
 from src.render import card_html
 
 st.set_page_config(layout="wide", page_title="Cine&Livro", page_icon="🎬")
@@ -22,6 +22,12 @@ if navegacao not in PAGINAS:
 def consultar(tipo, categoria, busca):
     """Consulta com cache para não reabrir o banco a cada tecla."""
     return buscar_dados(tipo=tipo, categoria=categoria, busca=busca)
+
+
+@st.cache_data(ttl=600, show_spinner=False)
+def adaptacoes():
+    """Obras que existem como filme e como livro no catálogo, com cache."""
+    return pares_adaptacao(buscar_dados())
 
 
 @st.cache_data(ttl=600, show_spinner=False)
@@ -55,6 +61,7 @@ if navegacao != "Home":
 
 try:
     itens = consultar(navegacao, categoria_sel, search or "")
+    pares = adaptacoes()
 except Exception:
     itens = None
     st.error("Não foi possível abrir o catálogo. Gere o banco com: python scripts/popular_banco.py")
@@ -72,7 +79,7 @@ if itens:
             cols = st.columns(3)
             for j, item in enumerate(lista[i:i + 3]):
                 with cols[j]:
-                    st.markdown(card_html(item), unsafe_allow_html=True)
+                    st.markdown(card_html(item, pares.get(item["id"])), unsafe_allow_html=True)
         st.write("---")
 elif itens is not None:
     termo = html.escape(search or "")
