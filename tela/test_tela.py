@@ -57,7 +57,9 @@ def test_fluxo_principal_busca_e_filtro(page: Page):
     abrir(page)
     # 1. Busca em tempo real pelo título
     campo = frame_busca(page).locator("input")
-    campo.fill("Duna")
+    # O st_keyup reage a teclas (keyup), como uma pessoa digitando; fill() não dispara keyup
+    campo.click()
+    campo.press_sequentially("Duna", delay=80)
     # A Home começa com 30 títulos: a busca precisa reduzir a lista e tirar o que não é Duna
     expect(page.get_by_text("30 títulos encontrados")).to_have_count(0, timeout=30_000)
     expect(page.locator(".card h3", has_text="Interestelar")).to_have_count(0)
