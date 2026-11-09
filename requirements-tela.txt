@@ -1,0 +1,4 @@
+# Teste de tela (navegador real + axe-core). Só no job "tela" do CI; ver tela/test_tela.py
+-r requirements-dev.txt
+pytest-playwright>=0.7
+axe-playwright-python>=0.1.4
