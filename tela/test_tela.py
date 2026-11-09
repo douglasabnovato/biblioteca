@@ -70,6 +70,16 @@ def test_fluxo_principal_busca_e_filtro(page: Page):
 
 def test_teclado_alcanca_menu_busca_e_filtro_com_foco_visivel(page: Page):
     abrir(page, "Filme")
+    page.wait_for_timeout(3000)
+    diagnostico = page.evaluate(
+        """() => [...document.querySelectorAll('nav a, iframe, input, [role=combobox]')].map(e => ({
+            tag: e.tagName, texto: (e.textContent || e.title || e.getAttribute('aria-label') || '').trim().slice(0, 30),
+            tabIndex: e.tabIndex, inert: !!e.closest('[inert]'), oculto: !!e.closest('[aria-hidden=true]'),
+            visibilidade: getComputedStyle(e).visibility, display: getComputedStyle(e).display,
+            caixa: (r => [Math.round(r.x), Math.round(r.y), Math.round(r.width), Math.round(r.height)])(e.getBoundingClientRect()),
+        }))"""
+    )
+    print("Focáveis:", json.dumps(diagnostico, ensure_ascii=False))
     vistos = []
     for _ in range(40):
         page.keyboard.press("Tab")
