@@ -67,7 +67,8 @@ def test_fluxo_principal_busca_e_filtro(page: Page):
     # 3. Filtro de categoria
     page.get_by_label("Filtrar por categoria").click()
     page.get_by_role("option", name="Terror").click()
-    expect(page.get_by_role("heading", level=2, name="Terror", exact=True)).to_be_visible(timeout=30_000)
+    # Durante a nova execução o Streamlit mantém por instantes a tela antiga: espera ficar um título só
+    expect(page.get_by_role("heading", level=2, name="Terror", exact=True)).to_have_count(1, timeout=30_000)
     expect(page.get_by_role("heading", name="Romance", exact=True)).to_have_count(0)
     page.screenshot(path=str(SAIDA / "fluxo-2-filtro.png"), full_page=True)
 
