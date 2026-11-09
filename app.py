@@ -43,7 +43,7 @@ links = "".join(
 )
 st.markdown(f'<nav class="nav-custom" aria-label="Principal">{links}</nav><div class="content-wrapper"></div>', unsafe_allow_html=True)
 
-st.title("Cine&Livro" if navegacao == "Home" else f"Cine&Livro — {PAGINAS[navegacao]}")
+st.title("Cine&Livro" if navegacao == "Home" else f"Cine&Livro — {PAGINAS[navegacao]}", anchor=False)
 
 def campo_busca():
     """Busca em tempo real (st_keyup); se o componente não carregar, usa o campo padrão do Streamlit."""
@@ -74,7 +74,8 @@ if itens:
     for item in itens:
         grupos.setdefault(item["categoria"], []).append(item)
     for categoria, lista in grupos.items():
-        st.subheader(categoria)
+        # h2 por categoria (o título da obra no card é h3) e sem âncora, para não somar paradas no Tab
+        st.header(categoria, anchor=False)
         for i in range(0, len(lista), 3):
             cols = st.columns(3)
             for j, item in enumerate(lista[i:i + 3]):

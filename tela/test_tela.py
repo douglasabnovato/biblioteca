@@ -21,6 +21,10 @@ PAGINAS = {"Home": "Início", "Filme": "Filmes", "Livro": "Livros"}
 def abrir(page: Page, p: str = "Home"):
     page.goto(f"{URL}/?p={p}")
     expect(page.get_by_text("encontrado").first).to_be_visible(timeout=90_000)
+    # O Streamlit desenha em partes: espera o menu e a busca antes de testar o teclado
+    expect(page.get_by_role("link", name="Livros")).to_be_visible()
+    expect(page.locator('iframe[title="st_keyup.st_keyup"]')).to_be_visible()
+    page.wait_for_load_state("networkidle")
 
 
 def frame_busca(page: Page):
@@ -63,14 +67,13 @@ def test_fluxo_principal_busca_e_filtro(page: Page):
     # 3. Filtro de categoria
     page.get_by_label("Filtrar por categoria").click()
     page.get_by_role("option", name="Terror").click()
-    expect(page.get_by_role("heading", name="Terror", exact=True)).to_be_visible(timeout=30_000)
+    expect(page.get_by_role("heading", level=2, name="Terror", exact=True)).to_be_visible(timeout=30_000)
     expect(page.get_by_role("heading", name="Romance", exact=True)).to_have_count(0)
     page.screenshot(path=str(SAIDA / "fluxo-2-filtro.png"), full_page=True)
 
 
 def test_teclado_alcanca_menu_busca_e_filtro_com_foco_visivel(page: Page):
     abrir(page, "Filme")
-    page.wait_for_timeout(3000)
     diagnostico = page.evaluate(
         """() => [...document.querySelectorAll('nav a, iframe, input, [role=combobox]')].map(e => ({
             tag: e.tagName, texto: (e.textContent || e.title || e.getAttribute('aria-label') || '').trim().slice(0, 30),

@@ -14,6 +14,7 @@
 }
 
 .stApp {
+    background-color: #120d1c;
     background: linear-gradient(135deg, #120d1c 0%, #1a1128 100%);
     color: var(--text-main);
     font-family: 'Inter', sans-serif;
@@ -233,6 +234,10 @@ iframe[title="st_keyup.st_keyup"] {
 :focus-visible {
     outline: 3px solid #ffd166 !important;
     outline-offset: 2px;
+}
+/* Contagem de resultados (st.caption): o cinza padrão do Streamlit dava 3,68:1; este tom passa de 4,5:1 */
+[data-testid="stCaption"], [data-testid="stCaptionContainer"], [data-testid="stCaptionContainer"] p {
+    color: var(--text-muted) !important;
 }
 /* Rótulos dos campos legíveis no tema escuro */
 [data-testid="stWidgetLabel"], [data-testid="stWidgetLabel"] p, label {
