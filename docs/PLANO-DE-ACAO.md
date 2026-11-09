@@ -12,6 +12,49 @@ Timebox: 30 min.
 | Could | Página de detalhe com sinopse longa e onde assistir/comprar | Alto | Médio | Próximo ciclo |
 | Could | Rodapé e CTA (itens do README) | Baixo | Baixo | Próximo ciclo |
 
+## Ciclo de 07/11/2026
+
+> Executado em 09/11/2026. Branch `feature/2026-11-07` → `developer/sprint-2026-11-12` → `main` (o PR para a `main` fica com o responsável). Nível: N1.
+
+### Produto
+
+**Foco.** Critério 8: medir acessibilidade e teclado com o app rodando (#6) e percorrer o fluxo principal na tela.
+
+**O que a pesquisa trouxe.**
+
+| Ideia | O que levamos para o projeto | Fonte |
+|---|---|---|
+| O `axe-playwright-python` roda o axe-core numa página aberta pelo Playwright em Python e devolve as violações | Job `tela` no CI com `Axe().run(page)` nas 3 páginas; falha com violação grave ou crítica | [PyPI: axe-playwright-python](https://pypi.org/project/axe-playwright-python), [documentação de uso](https://pamelafox.github.io/axe-playwright-python/usage) |
+| O Streamlit diz que pensa em acessibilidade nos componentes, mas nunca fez uma avaliação oficial | Testar o app montado, e não confiar no componente; o teste achou contraste baixo no `st.caption` | [Fórum do Streamlit: conformidade 508](https://discuss.streamlit.io/t/508-compliance-for-streamlit/13579/2) |
+| Regiões da página (header, main, footer) ajudam quem usa teclado e leitor de tela a pular blocos | Virou issue: tirar a violação `region` (#11) | [IBM Accessibility: design visual](https://www.ibm.com/able/toolkit/design/visual/) |
+
+**Backlog do ciclo.**
+
+| Prioridade | Item | Destino |
+|---|---|---|
+| 1 | Teste de tela com axe e teclado no CI | Este ciclo (#6) |
+| 2 | Contraste da contagem e ordem dos títulos | Este ciclo (#6) |
+| 3 | Violação moderada `region` | Issue #11 |
+| 4 | Rodar o app no Windows (caminhos longos) | Responsável (#12) |
+| 5 | Página de detalhe e mais pares | Issues #7 e #8 |
+| 6 | App público e proteção da `main` | Responsável (#4, #5) |
+
+### Engenharia
+
+**Arquitetura.** Streamlit (`app.py`) lê o SQLite por `src/backend.py`; `src/render.py` monta os cards com HTML escapado. Os testes de tela ficam em `tela/`, fora do `pytest` padrão, para falhar (e não serem pulados) quando o app não está no ar.
+
+**Riscos.**
+- O Streamlit desenha a tela em partes: o teste espera o menu e a busca aparecerem antes de usar o teclado, e espera sobrar um título só depois do filtro.
+- Versões do Playwright e do axe no job `tela` não estão fixas (`>=`); o log do CI registra as instaladas (playwright 1.64.1, pytest-playwright 0.10.0).
+
+**Definição de pronto.** Jobs `app` e `tela` verdes no PR; `docs/MVP.md` e README atualizados.
+
+### Plano de ação
+
+**Este ciclo executa.** Itens 1 e 2 do backlog, o fluxo na tela e a atualização do `docs/MVP.md` e do README.
+
+**Vira issue.** #11 (agente); #12 (responsável).
+
 ## Ciclo de 03/11/2026
 
 Executado em 06/11/2026, nas branches `feature/2026-11-06` → `developer/sprint-2026-11-12` → `main`.
