@@ -17,7 +17,7 @@ def rodar(p=None):
 def test_home_agrupa_por_categoria():
     at = rodar()
     assert not at.exception
-    assert [s.value for s in at.subheader] == ["Ação", "Comédia", "Ficção Científica", "Romance", "Terror"]
+    assert [s.value for s in at.header] == ["Ação", "Comédia", "Ficção Científica", "Romance", "Terror"]
     assert at.caption[0].value == "30 títulos encontrados"
 
 
@@ -28,7 +28,7 @@ def test_pagina_de_livros_tem_filtro_com_categorias_do_banco():
     opcoes = at.selectbox[0].options
     assert opcoes[0] == "Todas" and "Romance" in opcoes
     at.selectbox[0].select("Terror").run()
-    assert [s.value for s in at.subheader] == ["Terror"]
+    assert [s.value for s in at.header] == ["Terror"]
 
 
 def test_home_mostra_adaptacao_entre_filme_e_livro():
