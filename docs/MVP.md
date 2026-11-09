@@ -21,7 +21,7 @@ Os 2 critérios que faltam (3 e 10) dependem do responsável, cada um com issue 
 | 5 | Medição de uso | A métrica principal é coletada | Não se aplica (N1) |
 | 6 | Falhas tratadas | Erro, vazio e carregamento têm resposta clara | Atende: `pytest -q` no CI em 09/11/2026, 15 passed, inclusive banco ausente e busca vazia |
 | 7 | Desempenho aceitável | LCP de até 2,5 s no celular | Não se aplica (N1) |
-| 8 | Acessibilidade básica | axe e teclado | Atende: `pytest tela -v` no job `tela` do CI em 09/11/2026 ([run](https://github.com/douglasabnovato/biblioteca/actions/runs/42630736697)), 5 passed. O axe-core não achou violação grave em Início, Filmes e Livros; antes, a contagem de resultados tinha contraste de 3,68:1. O Tab alcança o menu, a busca e o filtro, com foco visível. Sobra 1 violação moderada, `region` (#11) |
+| 8 | Acessibilidade básica | axe e teclado | Atende: `pytest tela -v` no job `tela` do CI em 09/11/2026 ([run](https://github.com/douglasabnovato/biblioteca/actions/runs/42631834475)), 5 passed. O axe-core não achou violação grave em Início, Filmes e Livros; antes, a contagem de resultados tinha contraste de 3,68:1. O Tab alcança o menu, a busca e o filtro, com foco visível. Sobra 1 violação moderada, `region` (#11) |
 | 9 | Segurança e conformidade | Riscos decididos; termos de terceiros cumpridos | Atende: sem dados pessoais; consulta parametrizada; título e descrição escapados no HTML (`tests/test_backend.py`) |
 | 10 | Entrega confiável | Publicação só depois de CI verde | Parcial: CI em todo push e PR, com os jobs `app` e `tela`; a `main` não está protegida (#5) |
 | 11 | Testes dos fluxos críticos | Testes automatizados no CI | Atende: `pytest -q` (15 testes, com AppTest) e `pytest tela` (5 testes num navegador real), verdes no CI em 09/11/2026 |
@@ -29,10 +29,10 @@ Os 2 critérios que faltam (3 e 10) dependem do responsável, cada um com issue 
 
 ### Fluxo principal percorrido na tela (09/11/2026)
 
-Como foi feito: o `pip` com Streamlit falha no Windows local por caminho longo (#12). Por isso o job `tela` do CI sobe o app com `streamlit run app.py` e roda `tela/test_tela.py` num Chromium real (Playwright). As capturas e o resultado do axe ficam no artefato `tela-saida` do [run](https://github.com/douglasabnovato/biblioteca/actions/runs/42630736697).
+Como foi feito: o `pip` com Streamlit falha no Windows local por caminho longo (#12). Por isso o job `tela` do CI sobe o app com `streamlit run app.py` e roda `tela/test_tela.py` num Chromium real (Playwright). As capturas e o resultado do axe ficam no artefato `tela-saida` do [run](https://github.com/douglasabnovato/biblioteca/actions/runs/42631834475).
 
 1. Início abre com "30 títulos encontrados".
-2. A busca em tempo real por "Duna" mostra o título.
+2. A busca em tempo real, digitando "Duna", reduz a lista de 30 títulos e tira os que não são Duna.
 3. O menu leva a Livros e marca `aria-current="page"`.
 4. O filtro "Terror" deixa só a categoria Terror.
 5. Pelo teclado, o Tab passa por Início, Filmes, Livros, a busca e o filtro de categoria, e os links mostram contorno de foco.
