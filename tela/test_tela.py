@@ -58,8 +58,10 @@ def test_fluxo_principal_busca_e_filtro(page: Page):
     # 1. Busca em tempo real pelo título
     campo = frame_busca(page).locator("input")
     campo.fill("Duna")
-    expect(page.get_by_text("Duna").first).to_be_visible(timeout=30_000)
-    expect(page.get_by_text("título encontrado").or_(page.get_by_text("títulos encontrados")).first).to_be_visible()
+    # A Home começa com 30 títulos: a busca precisa reduzir a lista e tirar o que não é Duna
+    expect(page.get_by_text("30 títulos encontrados")).to_have_count(0, timeout=30_000)
+    expect(page.locator(".card h3", has_text="Interestelar")).to_have_count(0)
+    expect(page.locator(".card h3", has_text="Duna").first).to_be_visible()
     page.screenshot(path=str(SAIDA / "fluxo-1-busca.png"), full_page=True)
     # 2. Menu leva para Livros, com o item atual marcado
     page.get_by_role("link", name="Livros").click()
@@ -67,9 +69,9 @@ def test_fluxo_principal_busca_e_filtro(page: Page):
     # 3. Filtro de categoria
     page.get_by_label("Filtrar por categoria").click()
     page.get_by_role("option", name="Terror").click()
-    # Durante a nova execução o Streamlit mantém por instantes a tela antiga: espera ficar um título só
-    expect(page.get_by_role("heading", level=2, name="Terror", exact=True)).to_have_count(1, timeout=30_000)
-    expect(page.get_by_role("heading", name="Romance", exact=True)).to_have_count(0)
+    # Sem filtro há várias categorias (h2); com "Terror", sobra uma só, e é ela
+    expect(page.get_by_role("heading", level=2)).to_have_count(1, timeout=30_000)
+    expect(page.get_by_role("heading", level=2, name="Terror", exact=True)).to_be_visible()
     page.screenshot(path=str(SAIDA / "fluxo-2-filtro.png"), full_page=True)
 
 
@@ -95,7 +97,8 @@ def test_teclado_alcanca_menu_busca_e_filtro_com_foco_visivel(page: Page):
                     tag: a.tagName,
                     texto: (a.getAttribute('aria-label') || a.textContent || a.title || '').trim().slice(0, 40),
                     titulo: a.title || '',
-                    contorno: estilo.outlineStyle !== 'none' && parseFloat(estilo.outlineWidth) > 0,
+                    // contorno do projeto (3px), e não o anel padrão de 1px do navegador
+                    contorno: estilo.outlineStyle !== 'none' && parseFloat(estilo.outlineWidth) >= 3,
                 };
             }"""
         )
