@@ -33,7 +33,13 @@ def test_axe_sem_violacao_grave(page: Page, p: str):
     resultado = Axe().run(page)
     violacoes = resultado.response["violations"]
     resumo = [
-        {"regra": v["id"], "impacto": v["impact"], "alvos": [n["target"] for n in v["nodes"]][:5]}
+        {
+            "regra": v["id"],
+            "impacto": v["impact"],
+            "alvos": [n["target"] for n in v["nodes"]][:5],
+            "html": [n["html"][:160] for n in v["nodes"]][:3],
+            "motivo": [n.get("failureSummary", "")[:300] for n in v["nodes"]][:2],
+        }
         for v in violacoes
     ]
     (SAIDA / f"axe-{p}.json").write_text(json.dumps(resumo, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -57,8 +63,8 @@ def test_fluxo_principal_busca_e_filtro(page: Page):
     # 3. Filtro de categoria
     page.get_by_label("Filtrar por categoria").click()
     page.get_by_role("option", name="Terror").click()
-    expect(page.get_by_role("heading", name="Terror")).to_be_visible(timeout=30_000)
-    expect(page.get_by_role("heading", name="Romance")).to_have_count(0)
+    expect(page.get_by_role("heading", name="Terror", exact=True)).to_be_visible(timeout=30_000)
+    expect(page.get_by_role("heading", name="Romance", exact=True)).to_have_count(0)
     page.screenshot(path=str(SAIDA / "fluxo-2-filtro.png"), full_page=True)
 
 
@@ -81,6 +87,7 @@ def test_teclado_alcanca_menu_busca_e_filtro_com_foco_visivel(page: Page):
         )
         vistos.append(alvo)
     (SAIDA / "teclado.json").write_text(json.dumps(vistos, ensure_ascii=False, indent=2), encoding="utf-8")
+    print("Tab:", json.dumps(vistos, ensure_ascii=False))
     links = [v for v in vistos if v["tag"] == "A" and v["texto"] in PAGINAS.values()]
     assert {v["texto"] for v in links} == set(PAGINAS.values()), vistos
     assert all(v["contorno"] for v in links), links
