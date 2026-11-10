@@ -4,7 +4,7 @@
 
 Sem link publicado que responda: em 09/11/2026, https://biblioteca-cine-livros.streamlit.app/ responde HTTP 303 e redireciona para o login do Streamlit, porque o app está privado. Tornar público é do responsável ([#4](https://github.com/douglasabnovato/biblioteca/issues/4)). Para ver o catálogo, rode localmente (seção "Como executar").
 
-**Finalizado: sim**, com 8 de 10 critérios aplicáveis atendidos; os 2 restantes dependem do responsável.
+**Finalizado: sim**, com 9 de 10 critérios aplicáveis atendidos; o que resta (#4) depende do responsável. A `main` está protegida desde 10/11/2026 (exige PR e bloqueia force push).
 
 **O que foi feito em 09/11/2026**
 
@@ -14,7 +14,7 @@ Sem link publicado que responda: em 09/11/2026, https://biblioteca-cine-livros.s
 **O que queremos fazer**
 
 - [#4](https://github.com/douglasabnovato/biblioteca/issues/4) Tornar o app do Streamlit público ou corrigir o link (responsável).
-- [#5](https://github.com/douglasabnovato/biblioteca/issues/5) Proteger a `main` com PR e CI obrigatórios (responsável).
+- [#5](https://github.com/douglasabnovato/biblioteca/issues/5) Proteger a `main`: feito em 10/11/2026 (ruleset `principal-protegida`); a issue fecha no merge da `main`.
 - [#12](https://github.com/douglasabnovato/biblioteca/issues/12) Habilitar caminhos longos no Windows para rodar o app localmente (responsável).
 - [#7](https://github.com/douglasabnovato/biblioteca/issues/7) Abrir a página de detalhe de cada título.
 - [#8](https://github.com/douglasabnovato/biblioteca/issues/8) Ampliar o catálogo com mais pares de filme e livro.

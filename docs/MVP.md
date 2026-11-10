@@ -1,16 +1,16 @@
 # MVP — Cine&Livro
 
-> Fonte única do estado. Tabela atual de 09/11/2026 (ciclo de 07/11/2026). As tabelas anteriores estão em "Histórico", no fim.
+> Fonte única do estado. Tabela atual de 09/11/2026 (ciclo de 07/11/2026), com o critério 10 revisto em 10/11/2026. As tabelas anteriores estão em "Histórico", no fim.
 
 **Problema e público:** Quem busca o que ver ou ler encontra filmes e livros num único catálogo.
 
 **Nível:** N1 (estudo). Critérios 5 (medição) e 7 (LCP no ar) não se aplicam e saem da conta.
 
-**Resumo:** 8 de 10 aplicáveis atendidos
+**Resumo:** 9 de 10 aplicáveis atendidos
 
 **Finalizado:** sim
 
-Os 2 critérios que faltam (3 e 10) dependem do responsável, cada um com issue `depende-do-responsavel`: tornar o app público (#4) e proteger a `main` (#5).
+O critério que falta (3) depende do responsável, com issue `depende-do-responsavel`: tornar o app público (#4). A `main` está protegida desde 10/11/2026 (#5).
 
 | # | Critério | Como verificar | Situação em 09/11/2026 |
 |---|---|---|---|
@@ -23,7 +23,7 @@ Os 2 critérios que faltam (3 e 10) dependem do responsável, cada um com issue 
 | 7 | Desempenho aceitável | LCP de até 2,5 s no celular | Não se aplica (N1) |
 | 8 | Acessibilidade básica | axe e teclado | Atende: `pytest tela -v` no job `tela` do CI em 09/11/2026 ([run](https://github.com/douglasabnovato/biblioteca/actions/runs/42631834475)), 5 passed. O axe-core não achou violação grave em Início, Filmes e Livros; antes, a contagem de resultados tinha contraste de 3,68:1. O Tab alcança o menu, a busca e o filtro, com foco visível. Sobra 1 violação moderada, `region` (#11) |
 | 9 | Segurança e conformidade | Riscos decididos; termos de terceiros cumpridos | Atende: sem dados pessoais; consulta parametrizada; título e descrição escapados no HTML (`tests/test_backend.py`) |
-| 10 | Entrega confiável | Publicação só depois de CI verde | Parcial: CI em todo push e PR, com os jobs `app` e `tela`; a `main` não está protegida (#5) |
+| 10 | Entrega confiável | Publicação só depois de CI verde | Atende: `gh api repos/douglasabnovato/biblioteca/rulesets` em 10/11/2026: ruleset `principal-protegida` ativo (exige PR, bloqueia force push e exclusão); o workflow `CI` roda em todo push e PR, com os jobs `app` e `tela` (#5) |
 | 11 | Testes dos fluxos críticos | Testes automatizados no CI | Atende: `pytest -q` (15 testes, com AppTest) e `pytest tela` (5 testes num navegador real), verdes no CI em 09/11/2026 |
 | 12 | Documentação honesta | Qualquer pessoa roda o projeto, e os números estão certos | Atende: README com o link real e o motivo de não abrir; `curl` em 09/11/2026 deu 303 para o login, e o README diz isso |
 
