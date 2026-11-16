@@ -1,17 +1,30 @@
 """Testes da interface com o AppTest do Streamlit (execução sem navegador)."""
+import sqlite3
 from pathlib import Path
 
+import streamlit as st
 from streamlit.testing.v1 import AppTest
+
+import src.backend
+
+from src.backend import buscar_dados
 
 APP = str(Path(__file__).resolve().parent.parent / "app.py")
 
 
-def rodar(p=None):
-    """Executa o app, opcionalmente em uma página (?p=)."""
+def rodar(p=None, **params):
+    """Executa o app, opcionalmente em uma página (?p=) e com outros parâmetros da URL (ex.: id)."""
     at = AppTest.from_file(APP, default_timeout=30)
     if p:
         at.query_params["p"] = p
+    for chave, valor in params.items():
+        at.query_params[chave] = valor
     return at.run()
+
+
+def id_de(titulo):
+    """Id de um título no banco que o app usa."""
+    return next(i["id"] for i in buscar_dados() if i["titulo"] == titulo)
 
 
 def test_home_agrupa_por_categoria():
@@ -41,4 +54,62 @@ def test_home_mostra_adaptacao_entre_filme_e_livro():
 def test_pagina_invalida_volta_para_home():
     at = rodar("<script>")
     assert at.title[0].value == "Cine&Livro"
+
+
+def test_detalhe_mostra_titulo_tipo_categoria_e_descricao():
+    at = rodar("item", id=str(id_de("Duna")))
+    assert not at.exception, at.exception
+    assert at.title[0].value == "Duna"
+    textos = " ".join(m.value for m in at.markdown)
+    assert "<dt>Tipo</dt><dd>Livro</dd>" in textos and "<dt>Categoria</dt><dd>Ficção Científica</dd>" in textos
+    assert 'href="?p=Livro"' in textos
+    assert not at.warning
+
+
+def test_detalhe_liga_para_a_obra_no_outro_formato():
+    filme = id_de("Percy Jackson e O Ladrão de Raios")
+    livro = id_de("Percy Jackson - O Ladrão de Raios")
+    at = rodar("item", id=str(filme))
+    textos = " ".join(m.value for m in at.markdown)
+    assert f'Também em livro: <a href="?p=item&amp;id={livro}" target="_self">' in textos
+
+
+def test_detalhe_com_id_inexistente_ou_invalido_volta_para_o_inicio_com_aviso():
+    for valor in ("99999", "abc", "0", "1 OR 1=1", ""):
+        at = rodar("item", id=valor)
+        assert not at.exception, (valor, at.exception)
+        assert at.title[0].value == "Cine&Livro", valor
+        assert at.warning and "não encontrado" in at.warning[0].value, valor
+        assert at.caption[0].value == "30 títulos encontrados", valor
+
+
+def test_card_da_home_leva_ao_detalhe():
+    at = rodar()
+    textos = " ".join(m.value for m in at.markdown)
+    assert f'<h3><a href="?p=item&amp;id={id_de("Duna")}" target="_self">Duna</a></h3>' in textos
+
+
+# Os dois testes abaixo trocam src.backend.buscar_dados. Isso funciona porque o app.py refaz
+# "from src.backend import ..." a cada execução do AppTest; se o import mudar, o teste precisa mudar junto.
+def test_banco_indisponivel_mostra_erro_claro(monkeypatch):
+    def falha(**_):
+        raise sqlite3.OperationalError("unable to open database file")
+
+    st.cache_data.clear()
+    monkeypatch.setattr(src.backend, "buscar_dados", falha)
+    at = rodar()
+    st.cache_data.clear()
+    assert not at.exception, at.exception
+    assert at.error and "Não foi possível abrir o catálogo" in at.error[0].value
+    assert not at.caption
+
+
+def test_lista_vazia_mostra_aviso(monkeypatch):
+    st.cache_data.clear()
+    monkeypatch.setattr(src.backend, "buscar_dados", lambda **_: [])
+    at = rodar("Filme")
+    st.cache_data.clear()
+    assert not at.exception, at.exception
+    assert at.info and at.info[0].value.startswith("Nenhum resultado encontrado")
+    assert not at.header
 # Fim de test_app.py
