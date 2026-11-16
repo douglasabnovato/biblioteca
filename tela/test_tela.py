@@ -18,7 +18,9 @@ SAIDA.mkdir(exist_ok=True)
 PAGINAS = {"Home": "Início", "Filme": "Filmes", "Livro": "Livros"}
 
 
-def abrir(page: Page, p: str = "Home"):
+def abrir(page: Page, p: str = "Home", tema: str = "light"):
+    # O tema do app é fixo (.streamlit/config.toml); o teste confere que a preferência do sistema não muda o resultado
+    page.emulate_media(color_scheme=tema, reduced_motion="reduce")
     page.goto(f"{URL}/?p={p}")
     expect(page.get_by_text("encontrado").first).to_be_visible(timeout=90_000)
     # O Streamlit desenha em partes: espera o menu e a busca antes de testar o teclado
@@ -31,9 +33,8 @@ def frame_busca(page: Page):
     return page.frame_locator('iframe[title="st_keyup.st_keyup"]')
 
 
-@pytest.mark.parametrize("p", list(PAGINAS))
-def test_axe_sem_violacao_grave(page: Page, p: str):
-    abrir(page, p)
+def rodar_axe(page: Page, nome: str):
+    """Roda o axe-core, guarda o resumo e a captura em tela-saida/ e devolve as violações."""
     resultado = Axe().run(page)
     violacoes = resultado.response["violations"]
     resumo = [
@@ -46,11 +47,56 @@ def test_axe_sem_violacao_grave(page: Page, p: str):
         }
         for v in violacoes
     ]
-    (SAIDA / f"axe-{p}.json").write_text(json.dumps(resumo, ensure_ascii=False, indent=2), encoding="utf-8")
-    page.screenshot(path=str(SAIDA / f"tela-{p}.png"), full_page=True)
-    print(f"axe {p}: {len(violacoes)} violações", json.dumps(resumo, ensure_ascii=False))
-    graves = [r for r in resumo if r["impacto"] in ("serious", "critical")]
-    assert graves == [], graves
+    (SAIDA / f"axe-{nome}.json").write_text(json.dumps(resumo, ensure_ascii=False, indent=2), encoding="utf-8")
+    page.screenshot(path=str(SAIDA / f"tela-{nome}.png"), full_page=True)
+    print(f"axe {nome}: {len(violacoes)} violações", json.dumps(resumo, ensure_ascii=False))
+    return resumo
+
+
+@pytest.mark.parametrize("tema", ["light", "dark"])
+@pytest.mark.parametrize("p", list(PAGINAS))
+def test_axe_sem_violacao(page: Page, p: str, tema: str):
+    # Desde o ciclo de 15/11/2026, qualquer violação reprova, inclusive as moderadas (#11)
+    page.set_viewport_size({"width": 1366, "height": 900})
+    abrir(page, p, tema)
+    # Desde o Streamlit 1.67 o conteúdo fica num <main>; antes, a regra "region" acusava conteúdo fora de landmark
+    expect(page.get_by_role("main")).to_have_count(1)
+    resumo = rodar_axe(page, f"{p}-{tema}")
+    assert resumo == [], resumo
+
+
+@pytest.mark.parametrize("tema", ["light", "dark"])
+def test_detalhe_abre_pelo_card_sem_violacao(page: Page, tema: str):
+    page.set_viewport_size({"width": 1366, "height": 900})
+    abrir(page, "Home", tema)
+    page.locator(".card h3 a", has_text="Percy Jackson e O Ladrão de Raios").click()
+    expect(page.get_by_role("heading", level=1, name="Percy Jackson e O Ladrão de Raios")).to_be_visible(timeout=60_000)
+    expect(page.get_by_text("Também em livro")).to_be_visible()
+    resumo = rodar_axe(page, f"detalhe-{tema}")
+    assert resumo == [], resumo
+    # O link da adaptação leva ao livro, e "Voltar" leva à lista do tipo
+    page.locator(".detalhe a", has_text="Percy Jackson - O Ladrão de Raios").click()
+    expect(page.get_by_role("heading", level=1, name="Percy Jackson - O Ladrão de Raios")).to_be_visible(timeout=60_000)
+    page.get_by_role("link", name="Voltar para Livros").click()
+    expect(page.get_by_role("link", name="Livros")).to_have_attribute("aria-current", "page", timeout=60_000)
+
+
+def test_detalhe_com_id_invalido_volta_para_o_inicio(page: Page):
+    page.goto(f"{URL}/?p=item&id=abc")
+    expect(page.get_by_text("Título não encontrado")).to_be_visible(timeout=90_000)
+    expect(page.get_by_text("30 títulos encontrados")).to_be_visible()
+
+
+def test_esc_fecha_o_filtro_e_mantem_o_foco(page: Page):
+    abrir(page, "Livro")
+    filtro = page.get_by_label("Filtrar por categoria")
+    filtro.focus()
+    page.keyboard.press("ArrowDown")  # abre a lista do filtro pelo teclado
+    expect(page.get_by_role("listbox")).to_be_visible(timeout=10_000)
+    page.keyboard.press("Escape")
+    expect(page.get_by_role("listbox")).to_have_count(0, timeout=10_000)
+    foco = page.evaluate("() => document.activeElement.getAttribute('aria-label') || ''")
+    assert "categoria" in foco.lower(), foco
 
 
 def test_fluxo_principal_busca_e_filtro(page: Page):
