@@ -1,7 +1,12 @@
 """Testes da interface com o AppTest do Streamlit (execução sem navegador)."""
 from pathlib import Path
 
+import sqlite3
+
+import streamlit as st
 from streamlit.testing.v1 import AppTest
+
+import src.backend
 
 from src.backend import buscar_dados
 
@@ -81,4 +86,25 @@ def test_card_da_home_leva_ao_detalhe():
     at = rodar()
     textos = " ".join(m.value for m in at.markdown)
     assert f'<h3><a href="?p=item&amp;id={id_de("Duna")}" target="_self">Duna</a></h3>' in textos
+def test_banco_indisponivel_mostra_erro_claro(monkeypatch):
+    def falha(**_):
+        raise sqlite3.OperationalError("unable to open database file")
+
+    st.cache_data.clear()
+    monkeypatch.setattr(src.backend, "buscar_dados", falha)
+    at = rodar()
+    st.cache_data.clear()
+    assert not at.exception, at.exception
+    assert at.error and "Não foi possível abrir o catálogo" in at.error[0].value
+    assert not at.caption
+
+
+def test_lista_vazia_mostra_aviso(monkeypatch):
+    st.cache_data.clear()
+    monkeypatch.setattr(src.backend, "buscar_dados", lambda **_: [])
+    at = rodar("Filme")
+    st.cache_data.clear()
+    assert not at.exception, at.exception
+    assert at.info and at.info[0].value.startswith("Nenhum resultado encontrado")
+    assert not at.header
 # Fim de test_app.py

@@ -16,7 +16,8 @@ PAGINAS = {"Home": "Início", "Filme": "Filmes", "Livro": "Livros"}
 navegacao = st.query_params.get("p", "Home")
 
 
-@st.cache_data(ttl=600, show_spinner=False)
+# O Streamlit só mostra o aviso se a consulta passar de meio segundo; a barra padrão de "Running" fica escondida pelo CSS
+@st.cache_data(ttl=600, show_spinner="Carregando o catálogo…")
 def consultar(tipo, categoria, busca):
     """Consulta com cache para não reabrir o banco a cada tecla."""
     return buscar_dados(tipo=tipo, categoria=categoria, busca=busca)
