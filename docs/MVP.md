@@ -4,7 +4,7 @@
 
 **Problema e público:** Quem busca o que ver ou ler encontra filmes e livros num único catálogo.
 
-**Hipótese:** Acreditamos que a busca sem acento e o filtro por categoria deixam uma pessoa achar um título sem instrução. **Meta:** o percurso busca → menu → filtro → detalhe termina sem ajuda e sem violação do axe. **Saberemos quando** o job `tela` do CI fizer esse percurso num navegador real, com o sistema em modo claro e em modo escuro, em todo PR. Num projeto N1 não há público para medir; a aposta vale como objetivo de estudo.
+**Hipótese:** Acreditamos que a busca sem acento e o filtro por categoria deixam uma pessoa achar um título sem instrução. **Meta:** o percurso busca → menu → filtro → detalhe termina sem ajuda e sem violação do axe. **Saberemos quando** o job `tela` do CI fizer esse percurso num navegador real, sem violação do axe, em todo PR. Num projeto N1 não há público para medir; a aposta vale como objetivo de estudo.
 
 **Nível:** N1 (estudo). Critérios 5 (medição) e 7 (LCP no ar) não se aplicam e saem da conta.
 
@@ -18,15 +18,15 @@ O link publicado ainda pede login, porque o app está privado. Em N1 a hospedage
 |---|---|---|---|
 | 1 | Problema e público claros | Dá para explicar em uma frase | Atende: frase acima |
 | 2 | Hipótese a validar | Aposta escrita, com meta | Atende: hipótese, meta e "saberemos quando" acima |
-| 3 | Fluxo principal completo | Teste no navegador (Playwright) passando no CI | Atende: `pytest tela -v` no job `tela` do CI em 16/11/2026 ([run](RUN2)): busca "Duna", menu Livros, filtro "Terror" e detalhe com link para a adaptação, num Chromium real. O app no ar segue privado (#4), o que não conta em N1 |
+| 3 | Fluxo principal completo | Teste no navegador (Playwright) passando no CI | Atende: `pytest tela -v` no job `tela` do CI em 16/11/2026 ([run](https://github.com/douglasabnovato/biblioteca/actions/runs/43797732155)): busca "Duna", menu Livros, filtro "Terror" e detalhe com link para a adaptação, num Chromium real. O app no ar segue privado (#4), o que não conta em N1 |
 | 4 | Escopo enxuto | O que não entra está registrado | Atende: catálogo fixo em SQLite; contas, avaliações, recomendação e API externa ficam fora (`docs/PLANO-DE-ACAO.md`) |
 | 5 | Medição de uso | A métrica principal é coletada | Não se aplica (N1) |
-| 6 | Falhas tratadas | Erro, vazio e carregamento têm resposta | Atende: `pytest -q` em 16/11/2026, 24 passed (local e no CI). Banco indisponível mostra erro claro e lista vazia mostra aviso (`test_banco_indisponivel_mostra_erro_claro`, `test_lista_vazia_mostra_aviso`); id inválido volta ao Início com aviso. Carregamento: `pytest tela -v` no CI em 16/11/2026 ([run](RUN2)), `test_aviso_de_carregamento_aparece_e_some`: com a consulta atrasada em 2 s (`CINELIVRO_ATRASO_TESTE`, só no teste), "Carregando o catálogo…" aparece e some quando a lista chega (#18) |
+| 6 | Falhas tratadas | Erro, vazio e carregamento têm resposta | Atende: `pytest -q` em 16/11/2026, 24 passed (local e no CI). Banco indisponível mostra erro claro e lista vazia mostra aviso (`test_banco_indisponivel_mostra_erro_claro`, `test_lista_vazia_mostra_aviso`); id inválido volta ao Início com aviso. Carregamento: `pytest tela -v` no CI em 16/11/2026 ([run](https://github.com/douglasabnovato/biblioteca/actions/runs/43797732155)), `test_aviso_de_carregamento_aparece_e_some`: com a consulta atrasada em 2 s (`CINELIVRO_ATRASO_TESTE`, só no teste), "Carregando o catálogo…" aparece e some quando a lista chega (#18) |
 | 7 | Desempenho aceitável | LCP de até 2,5 s no celular | Não se aplica (N1) |
-| 8 | Acessibilidade básica | axe e teclado | Atende: `pytest tela -v` em 16/11/2026 ([run](RUN2)) e local, 13 passed. O axe-core dá **0 violações** em Início, Filmes, Livros e no detalhe, com o sistema em modo claro e em modo escuro (o app tem um tema só, o escuro, fixo no `.streamlit/config.toml`), em 1366 px e com o catálogo real (antes sobrava a `region`, #11). O Tab alcança menu, busca e filtro com contorno de 3 px; Esc fecha o filtro e mantém o foco |
+| 8 | Acessibilidade básica | axe e teclado | Atende: `pytest tela -v` em 16/11/2026 ([run](https://github.com/douglasabnovato/biblioteca/actions/runs/43797732155)) e local, 13 passed. O axe-core dá **0 violações** em Início, Filmes, Livros e no detalhe, em 1366 px e com o catálogo real. O app tem um tema só, escuro e fixo (`base = "dark"` no `.streamlit/config.toml`), sem tema claro nem `prefers-color-scheme`; o teste roda também com o sistema em modo escuro só para provar que a tela não muda (antes sobrava a `region`, #11). O Tab alcança menu, busca e filtro com contorno de 3 px; Esc fecha o filtro e mantém o foco |
 | 9 | Segurança e conformidade | `pip-audit`, sem segredo, dados pessoais decididos | Atende: `pip-audit -r requirements.txt` em 16/11/2026 (local e no job `app`): "No known vulnerabilities found", depois de subir o Streamlit para 1.67.0 e o Pillow para 13. Alertas do Dependabot desligados (API 403). Sem segredos nem dados pessoais; consulta parametrizada; HTML escapado |
 | 10 | Entrega confiável | CI nos PRs e principal protegida | Atende: `gh api repos/douglasabnovato/biblioteca/rules/branches/main` em 16/11/2026: `deletion`, `non_fast_forward`, `pull_request` e `required_status_checks` (`app` e `tela`) |
-| 11 | Testes dos fluxos críticos | Testes automatizados no CI, sem `skipped` | Atende: no CI em 16/11/2026 ([run](RUN2)), `pytest -q` com 24 passed e `pytest tela -v` com 13 passed, nenhum pulado |
+| 11 | Testes dos fluxos críticos | Testes automatizados no CI, sem `skipped` | Atende: no CI em 16/11/2026 ([run](https://github.com/douglasabnovato/biblioteca/actions/runs/43797732155)), `pytest -q` com 24 passed e `pytest tela -v` com 13 passed, nenhum pulado |
 | 12 | Documentação honesta | Qualquer pessoa roda o projeto | Atende: comandos do README conferidos em 16/11/2026 (`pip install`, `popular_banco.py`, `pytest`, `streamlit run`, `pytest tela`); o README não dá o link como no ar: `curl` em 16/11/2026 devolve 303 para o login |
 
 ### Fluxo principal percorrido na tela (16/11/2026)
@@ -40,7 +40,7 @@ O job `tela` do CI sobe o app com `streamlit run app.py` e roda `tela/test_tela.
 5. O título "Percy Jackson e O Ladrão de Raios" abre o detalhe; o link "Também em livro" leva ao livro, e "Voltar para Livros" volta à lista.
 6. `?p=item&id=abc` volta ao Início com "Título não encontrado".
 7. Com a consulta atrasada em 2 s num segundo servidor, "Carregando o catálogo…" aparece e some quando a lista chega.
-8. O axe-core roda em todas essas telas, com o sistema em modo claro e em modo escuro, sem nenhuma violação.
+8. O axe-core roda em todas essas telas, sem nenhuma violação. O app não tem tema claro próprio: o tema é escuro e fixo, e a preferência do sistema não muda a tela.
 
 ## Histórico
 

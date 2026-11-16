@@ -20,9 +20,9 @@ Timebox: 30 min.
 
 **Problema e público.** Quem busca o que ver ou ler encontra filmes e livros num único catálogo.
 
-**Hipótese e meta.** Acreditamos que a busca sem acento e o filtro por categoria deixam uma pessoa achar um título sem instrução. Saberemos quando o teste de tela no navegador fizer o percurso (busca, menu e filtro) sem ajuda e sem violação do axe, com o sistema em modo claro e em modo escuro, em todo PR. Num projeto N1 não há medição com público.
+**Hipótese e meta.** Acreditamos que a busca sem acento e o filtro por categoria deixam uma pessoa achar um título sem instrução. Saberemos quando o teste de tela no navegador fizer o percurso (busca, menu e filtro) sem ajuda e sem violação do axe, sem violação do axe, em todo PR. Num projeto N1 não há medição com público.
 
-**Foco do ciclo.** Fechar as lacunas da régua: hipótese com "saberemos quando", axe com zero violações (inclusive a moderada `region`, #11), tema escuro fixo, para o axe valer com o sistema em modo claro ou escuro, auditoria de dependências no CI e hospedagem com passo a passo atualizado.
+**Foco do ciclo.** Fechar as lacunas da régua: hipótese com "saberemos quando", axe com zero violações (inclusive a moderada `region`, #11), tema escuro fixo, para a tela não depender da preferência do sistema (o app não tem tema claro), auditoria de dependências no CI e hospedagem com passo a passo atualizado.
 
 **O que a pesquisa trouxe.**
 
@@ -39,7 +39,7 @@ Timebox: 30 min.
 |---|---|---|---|---|
 | 1 | Auditoria de dependências no CI e atualização minor do Streamlit | Alto | Baixo | Este ciclo |
 | 2 | Hipótese com meta e "saberemos quando"; critério 3 conforme a régua N1 | Alto | Baixo | Este ciclo |
-| 3 | Violação `region` e axe com o sistema em modo claro e escuro | Médio | Baixo | Este ciclo (#11) |
+| 3 | Violação `region` e tema escuro fixo | Médio | Baixo | Este ciclo (#11) |
 | 4 | Esc fecha o filtro de categoria e devolve o foco; teste do aviso de carregamento | Médio | Baixo | Este ciclo (#18) |
 | 5 | Página de detalhe de cada título | Alto | Médio | Este ciclo, se couber (#7) |
 | 6 | Mais pares de filme e livro | Médio | Médio | Issue #8 |
@@ -56,7 +56,7 @@ Timebox: 30 min.
 - Subir o Streamlit de 1.64 para 1.67 pode mudar o DOM; o job `tela` pega a quebra.
 - O `pip` com Streamlit falha no Windows local por caminho longo (#12); o que não rodar aqui roda no CI e fica registrado no PR.
 
-**Qualidade.** Testes do fluxo no navegador com axe sem violação (sistema em modo claro e escuro), teclado (Tab e Esc) e foco visível; `pip-audit` sem vulnerabilidade conhecida; nenhum segredo nem dado pessoal.
+**Qualidade.** Testes do fluxo no navegador com axe sem violação, teclado (Tab e Esc) e foco visível; `pip-audit` sem vulnerabilidade conhecida; nenhum segredo nem dado pessoal.
 
 **Definição de pronto.** Jobs `app` e `tela` verdes no PR; `docs/MVP.md`, README e `docs/DEPLOY.md` atualizados com comando, data e resultado.
 

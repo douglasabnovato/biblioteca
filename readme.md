@@ -11,7 +11,7 @@ Sem link publicado que responda: em 16/11/2026, https://biblioteca-cine-livros.s
 - Ciclo de 15/11/2026 ([PR #17](https://github.com/douglasabnovato/biblioteca/pull/17)):
   - Segurança: Streamlit 1.64.0 → 1.67.0 e Pillow 13, que corrige vulnerabilidades da 12.x; `pip-audit` no CI.
   - Página de detalhe de cada título, com link para a obra no outro formato ([#7](https://github.com/douglasabnovato/biblioteca/issues/7)).
-  - axe-core com 0 violações, com o sistema em modo claro e escuro, incluindo o detalhe; Esc no filtro ([#11](https://github.com/douglasabnovato/biblioteca/issues/11)). Tema fixo em `.streamlit/config.toml`.
+  - axe-core com 0 violações em todas as telas, incluindo o detalhe; Esc no filtro ([#11](https://github.com/douglasabnovato/biblioteca/issues/11)). Tema escuro fixo em `.streamlit/config.toml` (o app não tem tema claro).
   - Testes de banco indisponível e de lista vazia, que o MVP citava e não existiam, e do aviso de carregamento ([#18](https://github.com/douglasabnovato/biblioteca/issues/18)).
   - Hipótese com meta e "saberemos quando"; passo a passo de publicação revisto.
 - Ciclo de 07/11/2026 ([PR #13](https://github.com/douglasabnovato/biblioteca/pull/13)): job `tela` no CI com axe e teclado ([#6](https://github.com/douglasabnovato/biblioteca/issues/6)).
