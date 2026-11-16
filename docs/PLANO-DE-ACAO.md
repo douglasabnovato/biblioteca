@@ -12,6 +12,60 @@ Timebox: 30 min.
 | Could | Página de detalhe com sinopse longa e onde assistir/comprar | Alto | Médio | Próximo ciclo |
 | Could | Rodapé e CTA (itens do README) | Baixo | Baixo | Próximo ciclo |
 
+## Ciclo de 15/11/2026
+
+> Executado em 15/11/2026. Branch `feature/2026-11-15` → `developer/sprint-2026-11-12` → `main`. O PR da sprint para a `main` (#15) segue aberto com o responsável. Nível: N1.
+
+### Produto
+
+**Problema e público.** Quem busca o que ver ou ler encontra filmes e livros num único catálogo.
+
+**Hipótese e meta.** Acreditamos que a busca sem acento e o filtro por categoria deixam uma pessoa achar um título sem instrução. Saberemos quando o teste de tela no navegador fizer o percurso (busca, menu e filtro) sem ajuda e sem violação do axe, nos temas claro e escuro, em todo PR. Num projeto N1 não há medição com público.
+
+**Foco do ciclo.** Fechar as lacunas da régua: hipótese com "saberemos quando", axe com zero violações (inclusive a moderada `region`, #11), tema fixo para o axe valer no claro e no escuro, auditoria de dependências no CI e hospedagem com passo a passo atualizado.
+
+**O que a pesquisa trouxe.**
+
+| Ideia | O que levamos para o projeto | Fonte |
+|---|---|---|
+| A regra `region` do axe pede todo o conteúdo dentro de um landmark; o preferido é o elemento nativo (`<main>`), e `role="main"` é aceito | Marcar a área principal do Streamlit como região principal e fazer o teste falhar com qualquer violação | [Deque University: regra region](https://dequeuniversity.com/rules/axe/4.10/region) |
+| O tema do Streamlit herda de `base = "light"` ou `"dark"` no `[theme]` do `.streamlit/config.toml` | Fixar `base = "dark"`, que é o visual do CSS do projeto, para a tela não mudar com a preferência do sistema | [Streamlit: config.toml](https://docs.streamlit.io/develop/api-reference/configuration/config.toml), [Streamlit: theming](https://docs.streamlit.io/develop/concepts/configuration/theming) |
+| No Community Cloud, só quem administra o app o torna público: App settings → Sharing → "This app is public and searchable", ou Share → "Make this app public" | Passo a passo clique a clique no `docs/DEPLOY.md` e na issue #4 | [Streamlit: share your app](https://docs.streamlit.io/deploy/streamlit-community-cloud/share-your-app) |
+| O `pip-audit` confere pacotes Python contra a base de vulnerabilidades do PyPA | Passo `pip-audit -r requirements.txt` no CI, já que os alertas do Dependabot estão desligados (API 403) | [PyPI: pip-audit](https://pypi.org/project/pip-audit/) |
+
+**Backlog priorizado (impacto × esforço).**
+
+| Prioridade | Item | Impacto | Esforço | Destino |
+|---|---|---|---|---|
+| 1 | Auditoria de dependências no CI e atualização minor do Streamlit | Alto | Baixo | Este ciclo |
+| 2 | Hipótese com meta e "saberemos quando"; critério 3 conforme a régua N1 | Alto | Baixo | Este ciclo |
+| 3 | Violação `region` e axe no claro e no escuro | Médio | Baixo | Este ciclo (#11) |
+| 4 | Esc fecha o filtro de categoria e devolve o foco | Médio | Baixo | Este ciclo |
+| 5 | Página de detalhe de cada título | Alto | Médio | Este ciclo, se couber (#7) |
+| 6 | Mais pares de filme e livro | Médio | Médio | Issue #8 |
+| 7 | App público e caminhos longos no Windows | Alto | Baixo | Responsável (#4, #12) |
+
+**Fora do escopo.** Contas, avaliações, recomendação personalizada, API externa de filmes ou livros, domínio próprio.
+
+### Engenharia
+
+**Arquitetura.** `app.py` (Streamlit) lê o SQLite em modo leitura por `src/backend.py`; `src/render.py` monta o HTML escapado dos cards. O tema fica em `.streamlit/config.toml`. Os testes rodam em dois jobs: `app` (pytest com AppTest, sem navegador) e `tela` (Playwright e axe com `streamlit run`).
+
+**Riscos.**
+- Marcar a região principal depende do HTML gerado pelo Streamlit; o teste de tela confere o resultado a cada PR.
+- Subir o Streamlit de 1.64 para 1.67 pode mudar o DOM; o job `tela` pega a quebra.
+- O `pip` com Streamlit falha no Windows local por caminho longo (#12); o que não rodar aqui roda no CI e fica registrado no PR.
+
+**Qualidade.** Testes do fluxo no navegador com axe sem violação no claro e no escuro, teclado (Tab e Esc) e foco visível; `pip-audit` sem vulnerabilidade conhecida; nenhum segredo nem dado pessoal.
+
+**Definição de pronto.** Jobs `app` e `tela` verdes no PR; `docs/MVP.md`, README e `docs/DEPLOY.md` atualizados com comando, data e resultado.
+
+### Plano de ação
+
+**Este ciclo executa.** Itens 1 a 5 do backlog, o passo a passo de publicação e a atualização dos documentos.
+
+**Vira issue.** Mais pares (#8), app público (#4), caminhos longos (#12) e as tarefas novas que o ciclo identificar.
+
 ## Ciclo de 07/11/2026
 
 > Executado em 09/11/2026. Branch `feature/2026-11-07` → `developer/sprint-2026-11-12` → `main` (o PR para a `main` fica com o responsável). Nível: N1.
