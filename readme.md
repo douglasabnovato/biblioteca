@@ -4,10 +4,11 @@
 
 Sem link publicado que responda: em 16/11/2026, https://biblioteca-cine-livros.streamlit.app/ responde HTTP 303 e redireciona para o login do Streamlit, porque o app está privado. Tornar público é do responsável ([#4](https://github.com/douglasabnovato/biblioteca/issues/4)); o passo a passo está em [docs/DEPLOY.md](docs/DEPLOY.md). Para ver o catálogo, rode localmente (seção "Como executar").
 
-**Finalizado: não**, com 9 de 10 critérios aplicáveis atendidos. O 9 fica Parcial: os alertas do Dependabot estão ligados e, em 16/11/2026, havia 2 abertos, os dois do `pytest` 8.4.2 (só nos testes), que só se corrigem na versão 9 ([#27](https://github.com/douglasabnovato/biblioteca/issues/27)). A `main` está protegida (exige PR e os jobs `app` e `tela` verdes).
+**Finalizado: sim**, com 10 de 10 critérios aplicáveis atendidos. Os alertas do Dependabot estão ligados: em 16/11/2026, 14h38, havia 2 abertos, os dois do `pytest` 8.4.2, que só roda nos testes e não vai para o app no ar. Eles estão aceitos na [ADR-05](docs/adr/0005-aceitar-alertas-de-desenvolvimento.md), por ordem do responsável; a migração para o pytest 9 segue em [#20](https://github.com/douglasabnovato/biblioteca/issues/20). A `main` está protegida (exige PR e os jobs `app` e `tela` verdes).
 
 **O que foi feito**
 
+- 16/11/2026: alertas de desenvolvimento do Dependabot (`pytest`) aceitos na [ADR-05](docs/adr/0005-aceitar-alertas-de-desenvolvimento.md) ([#27](https://github.com/douglasabnovato/biblioteca/issues/27)).
 - Ciclo de 15/11/2026 ([PR #17](https://github.com/douglasabnovato/biblioteca/pull/17)):
   - Segurança: Streamlit 1.64.0 → 1.67.0 e Pillow 13, que corrige vulnerabilidades da 12.x; `pip-audit` no CI.
   - Página de detalhe de cada título, com link para a obra no outro formato ([#7](https://github.com/douglasabnovato/biblioteca/issues/7)).
@@ -23,7 +24,6 @@ Sem link publicado que responda: em 16/11/2026, https://biblioteca-cine-livros.s
 - [#12](https://github.com/douglasabnovato/biblioteca/issues/12) Caminhos longos no Windows (responsável; há alternativa com venv em caminho curto).
 - [#8](https://github.com/douglasabnovato/biblioteca/issues/8) Ampliar o catálogo com mais pares de filme e livro.
 - [#19](https://github.com/douglasabnovato/biblioteca/issues/19) Tirar o link "Link to heading" dos títulos dos cards.
-- [#27](https://github.com/douglasabnovato/biblioteca/issues/27) Resolver os 2 alertas do Dependabot que restam (`pytest`).
 - [#20](https://github.com/douglasabnovato/biblioteca/issues/20) Atualizar o pytest para a versão 9.
 - [#21](https://github.com/douglasabnovato/biblioteca/issues/21) Fixar as versões do Playwright e do axe no teste de tela.
 - [#22](https://github.com/douglasabnovato/biblioteca/issues/22) Reduzir o peso das capas na página inicial.
