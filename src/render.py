@@ -18,8 +18,17 @@ def imagem_data_uri(caminho):
     return f"data:{tipo};base64,{base64.b64encode(arquivo.read_bytes()).decode()}"
 
 
+def link_detalhe(item_id, texto):
+    """Link para a página de detalhe do título (mesma aba, como o menu)."""
+    try:
+        numero = int(item_id)
+    except (TypeError, ValueError):
+        return texto
+    return f'<a href="?p=item&amp;id={numero}" target="_self">{texto}</a>'
+
+
 def card_html(item, par=None):
-    """HTML de um card: capa com alt, título, descrição, selo do tipo e, se houver, a obra no outro formato."""
+    """HTML de um card: capa com alt, título com link para o detalhe, descrição, selo do tipo e, se houver, a obra no outro formato."""
     titulo = html.escape(str(item.get("titulo", "")))
     descricao = html.escape(str(item.get("descricao", "")))
     tipo = "Livro" if item.get("tipo") == "Livro" else "Filme"
@@ -30,8 +39,31 @@ def card_html(item, par=None):
     if par:
         formato = "livro" if par.get("tipo") == "Livro" else "filme"
         extra = f'<p class="adaptacao">Também em {formato}: {html.escape(str(par.get("titulo", "")))}</p>'
+    nome = link_detalhe(item.get("id"), titulo) if item.get("id") is not None else titulo
     return (
-        f'<article class="card">{capa}<div><h3>{titulo}</h3><p>{descricao}</p>{extra}</div>'
+        f'<article class="card">{capa}<div><h3>{nome}</h3><p>{descricao}</p>{extra}</div>'
         f'<span class="{classe}">{tipo}</span></article>'
     )
+
+
+def detalhe_html(item, par=None):
+    """HTML da página de detalhe: capa, tipo, categoria, descrição e link para a obra no outro formato."""
+    titulo = html.escape(str(item.get("titulo", "")))
+    descricao = html.escape(str(item.get("descricao", "")))
+    tipo = "Livro" if item.get("tipo") == "Livro" else "Filme"
+    categoria = html.escape(str(item.get("categoria", "")))
+    src = imagem_data_uri(item.get("imagem") or "")
+    capa = f'<img class="capa" src="{src}" alt="Capa de {titulo}">' if src else ""
+    extra = ""
+    if par:
+        formato = "livro" if par.get("tipo") == "Livro" else "filme"
+        nome_par = html.escape(str(par.get("titulo", "")))
+        extra = f'<p class="adaptacao">Também em {formato}: {link_detalhe(par.get("id"), nome_par)}</p>'
+    return (
+        f'<article class="detalhe">{capa}<div><dl>'
+        f'<dt>Tipo</dt><dd>{tipo}</dd><dt>Categoria</dt><dd>{categoria}</dd></dl>'
+        f'<p>{descricao}</p>{extra}</div></article>'
+    )
+
+
 # Fim de render.py

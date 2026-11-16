@@ -1,0 +1,3 @@
+# Tema fixo: o CSS do projeto é escuro, e o tema não muda com a preferência do sistema
+[theme]
+base = "dark"
