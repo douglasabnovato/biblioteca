@@ -4,7 +4,7 @@
 
 Sem link publicado que responda: em 16/11/2026, https://biblioteca-cine-livros.streamlit.app/ responde HTTP 303 e redireciona para o login do Streamlit, porque o app está privado. Tornar público é do responsável ([#4](https://github.com/douglasabnovato/biblioteca/issues/4)); o passo a passo está em [docs/DEPLOY.md](docs/DEPLOY.md). Para ver o catálogo, rode localmente (seção "Como executar").
 
-**Finalizado: sim**, com 10 de 10 critérios aplicáveis atendidos (antes, 9 de 10). A `main` está protegida (exige PR e os jobs `app` e `tela` verdes).
+**Finalizado: sim**, com 9 de 10 critérios aplicáveis atendidos. O 9 fica Parcial até o responsável ligar os alertas do Dependabot (#24). A `main` está protegida (exige PR e os jobs `app` e `tela` verdes).
 
 **O que foi feito**
 
