@@ -79,7 +79,7 @@ python -m venv .venv
 pip install -r requirements-dev.txt
 python scripts/popular_banco.py
 streamlit run app.py            # http://localhost:8501
-pytest                          # 22 testes
+pytest                          # 24 testes
 ```
 
 No Windows sem caminhos longos (#12), criar a venv numa pasta de caminho curto (ex.: `C:\v`). Em 16/11/2026, `pip install -r requirements.txt` funcionou assim, com `LongPathsEnabled = 0`.

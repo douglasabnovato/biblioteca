@@ -11,8 +11,8 @@ Sem link publicado que responda: em 16/11/2026, https://biblioteca-cine-livros.s
 - Ciclo de 15/11/2026 ([PR #17](https://github.com/douglasabnovato/biblioteca/pull/17)):
   - Segurança: Streamlit 1.64.0 → 1.67.0 e Pillow 13, que corrige vulnerabilidades da 12.x; `pip-audit` no CI.
   - Página de detalhe de cada título, com link para a obra no outro formato ([#7](https://github.com/douglasabnovato/biblioteca/issues/7)).
-  - axe-core com 0 violações no claro e no escuro, incluindo o detalhe; Esc no filtro ([#11](https://github.com/douglasabnovato/biblioteca/issues/11)). Tema fixo em `.streamlit/config.toml`.
-  - Testes de banco indisponível e de lista vazia, que o MVP citava e não existiam.
+  - axe-core com 0 violações, com o sistema em modo claro e escuro, incluindo o detalhe; Esc no filtro ([#11](https://github.com/douglasabnovato/biblioteca/issues/11)). Tema fixo em `.streamlit/config.toml`.
+  - Testes de banco indisponível e de lista vazia, que o MVP citava e não existiam, e do aviso de carregamento ([#18](https://github.com/douglasabnovato/biblioteca/issues/18)).
   - Hipótese com meta e "saberemos quando"; passo a passo de publicação revisto.
 - Ciclo de 07/11/2026 ([PR #13](https://github.com/douglasabnovato/biblioteca/pull/13)): job `tela` no CI com axe e teclado ([#6](https://github.com/douglasabnovato/biblioteca/issues/6)).
 - Ciclo de 03/11/2026 ([PR #9](https://github.com/douglasabnovato/biblioteca/pull/9)): cards mostram a obra no outro formato.
@@ -22,7 +22,6 @@ Sem link publicado que responda: em 16/11/2026, https://biblioteca-cine-livros.s
 - [#4](https://github.com/douglasabnovato/biblioteca/issues/4) Tornar o app do Streamlit público (responsável).
 - [#12](https://github.com/douglasabnovato/biblioteca/issues/12) Caminhos longos no Windows (responsável; há alternativa com venv em caminho curto).
 - [#8](https://github.com/douglasabnovato/biblioteca/issues/8) Ampliar o catálogo com mais pares de filme e livro.
-- [#18](https://github.com/douglasabnovato/biblioteca/issues/18) Testar o aviso de carregamento do catálogo.
 - [#19](https://github.com/douglasabnovato/biblioteca/issues/19) Tirar o link "Link to heading" dos títulos dos cards.
 - [#20](https://github.com/douglasabnovato/biblioteca/issues/20) Atualizar o pytest para a versão 9.
 - [#21](https://github.com/douglasabnovato/biblioteca/issues/21) Fixar as versões do Playwright e do axe no teste de tela.
@@ -88,10 +87,10 @@ Teste de tela, com o app no ar (`streamlit run app.py` em outro terminal):
 ```bash
 pip install -r requirements-tela.txt
 python -m playwright install chromium
-pytest tela                       # 12 testes: axe-core (claro e escuro), fluxo, detalhe e teclado num navegador real
+pytest tela                       # 13 testes: axe-core, fluxo, detalhe, carregamento e teclado num navegador real
 ```
 
-No Windows, o `pip` com Streamlit pode falhar por caminho longo (#12). Criar a venv numa pasta de caminho curto (ex.: `C:`) resolveu em 16/11/2026. O CI roda os dois conjuntos em todo push e PR. Com o app em outra porta, defina `APP_URL=http://localhost:<porta>` antes de `pytest tela`.
+No Windows, o `pip` com Streamlit pode falhar por caminho longo (#12). Criar a venv numa pasta de caminho curto (ex.: `C:\v`) resolveu em 16/11/2026. O CI roda os dois conjuntos em todo push e PR. O teste de carregamento usa um segundo servidor com `CINELIVRO_ATRASO_TESTE=2` (padrão: porta 8502). Com outras portas, defina `APP_URL` e `APP_URL_LENTO` antes de `pytest tela`.
 
 Para adicionar um título: inclua-o em `scripts/itens.json` (a capa vai em `assets/`) e rode o script de carga — ele avisa se faltar campo ou imagem.
 
