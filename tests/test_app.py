@@ -1,7 +1,6 @@
 """Testes da interface com o AppTest do Streamlit (execução sem navegador)."""
-from pathlib import Path
-
 import sqlite3
+from pathlib import Path
 
 import streamlit as st
 from streamlit.testing.v1 import AppTest
@@ -55,6 +54,8 @@ def test_home_mostra_adaptacao_entre_filme_e_livro():
 def test_pagina_invalida_volta_para_home():
     at = rodar("<script>")
     assert at.title[0].value == "Cine&Livro"
+
+
 def test_detalhe_mostra_titulo_tipo_categoria_e_descricao():
     at = rodar("item", id=str(id_de("Duna")))
     assert not at.exception, at.exception
@@ -86,6 +87,10 @@ def test_card_da_home_leva_ao_detalhe():
     at = rodar()
     textos = " ".join(m.value for m in at.markdown)
     assert f'<h3><a href="?p=item&amp;id={id_de("Duna")}" target="_self">Duna</a></h3>' in textos
+
+
+# Os dois testes abaixo trocam src.backend.buscar_dados. Isso funciona porque o app.py refaz
+# "from src.backend import ..." a cada execução do AppTest; se o import mudar, o teste precisa mudar junto.
 def test_banco_indisponivel_mostra_erro_claro(monkeypatch):
     def falha(**_):
         raise sqlite3.OperationalError("unable to open database file")

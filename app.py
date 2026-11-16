@@ -1,5 +1,7 @@
 """Cine&Livro: catálogo de filmes e livros com busca em tempo real, navegação por tipo e filtro por categoria."""
 import html
+import os
+import time
 
 import streamlit as st
 from st_keyup import st_keyup
@@ -14,10 +16,11 @@ with open("src/styles/main.css", encoding="utf-8") as f:
 
 PAGINAS = {"Home": "Início", "Filme": "Filmes", "Livro": "Livros"}
 navegacao = st.query_params.get("p", "Home")
+# Só nos testes de tela (#18): atrasa a consulta para o aviso de carregamento aparecer; em produção fica 0
+ATRASO_TESTE = min(float(os.environ.get("CINELIVRO_ATRASO_TESTE", "0") or 0), 10)
 
 
-# O Streamlit só mostra o aviso se a consulta passar de meio segundo; a barra padrão de "Running" fica escondida pelo CSS
-@st.cache_data(ttl=600, show_spinner="Carregando o catálogo…")
+@st.cache_data(ttl=600, show_spinner=False)
 def consultar(tipo, categoria, busca):
     """Consulta com cache para não reabrir o banco a cada tecla."""
     return buscar_dados(tipo=tipo, categoria=categoria, busca=busca)
@@ -47,10 +50,11 @@ aviso = None
 if navegacao == "item":
     try:
         detalhe = consultar_item(st.query_params.get("id", ""))
+        if detalhe is None:
+            aviso = "Título não encontrado. Veja o catálogo completo abaixo."
     except Exception:
-        detalhe = None
+        detalhe = None  # banco indisponível: a lista abaixo mostra o erro
     if detalhe is None:
-        aviso = "Título não encontrado. Veja o catálogo completo abaixo."
         navegacao = "Home"
 elif navegacao not in PAGINAS:
     navegacao = "Home"
@@ -64,7 +68,7 @@ st.markdown(f'<nav class="nav-custom" aria-label="Principal">{links}</nav><div c
 
 if detalhe:
     st.title(detalhe["titulo"], anchor=False)
-    pagina_tipo = detalhe["tipo"]
+    pagina_tipo = detalhe["tipo"] if detalhe["tipo"] in PAGINAS else "Home"
     st.markdown(
         f'<p class="voltar"><a href="?p={pagina_tipo}" target="_self">Voltar para {PAGINAS[pagina_tipo]}</a></p>',
         unsafe_allow_html=True,
@@ -94,9 +98,13 @@ categoria_sel = "Todas"
 if navegacao != "Home":
     categoria_sel = st.selectbox("Filtrar por categoria", ["Todas", *categorias_de(navegacao)])
 
+# O st.spinner só aparece se a espera passar de meio segundo; a barra de "Running" do Streamlit fica escondida pelo CSS
 try:
-    itens = consultar(navegacao, categoria_sel, search or "")
-    pares = adaptacoes()
+    with st.spinner("Carregando o catálogo…"):
+        if ATRASO_TESTE > 0:
+            time.sleep(ATRASO_TESTE)
+        itens = consultar(navegacao, categoria_sel, search or "")
+        pares = adaptacoes()
 except Exception:
     itens = None
     st.error("Não foi possível abrir o catálogo. Gere o banco com: python scripts/popular_banco.py")

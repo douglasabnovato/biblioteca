@@ -87,7 +87,7 @@ def test_buscar_item_pelo_id_e_recusa_id_invalido(db):
     duna = next(i for i in buscar_dados(db_path=db) if i["titulo"] == "Duna")
     assert buscar_item(duna["id"], db_path=db) == duna
     assert buscar_item(str(duna["id"]), db_path=db) == duna
-    for valor in (None, "", "abc", "0", "-1", "1 OR 1=1", "99999"):
+    for valor in (None, "", "abc", "0", "-1", "1 OR 1=1", "99999", "9" * 30):
         assert buscar_item(valor, db_path=db) is None, valor
 
 
@@ -95,6 +95,7 @@ def test_pares_adaptacao_traz_o_id_do_outro_formato(db):
     itens = buscar_dados(db_path=db)
     pares = pares_adaptacao(itens)
     ids = {i["id"] for i in itens}
+    assert pares
     assert all(p["id"] in ids and p["id"] != chave for chave, p in pares.items())
 
 

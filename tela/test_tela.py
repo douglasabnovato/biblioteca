@@ -13,6 +13,8 @@ from axe_playwright_python.sync_playwright import Axe
 from playwright.sync_api import Page, expect
 
 URL = os.environ.get("APP_URL", "http://localhost:8501").rstrip("/")
+# Segundo servidor, com CINELIVRO_ATRASO_TESTE: a consulta demora e o aviso de carregamento precisa aparecer (#18)
+URL_LENTO = os.environ.get("APP_URL_LENTO", "http://localhost:8502").rstrip("/")
 SAIDA = Path(os.environ.get("TELA_SAIDA", "tela-saida"))
 SAIDA.mkdir(exist_ok=True)
 PAGINAS = {"Home": "Início", "Filme": "Filmes", "Livro": "Livros"}
@@ -24,8 +26,8 @@ def abrir(page: Page, p: str = "Home", tema: str = "light"):
     page.goto(f"{URL}/?p={p}")
     expect(page.get_by_text("encontrado").first).to_be_visible(timeout=90_000)
     # O Streamlit desenha em partes: espera o menu e a busca antes de testar o teclado
-    expect(page.get_by_role("link", name="Livros")).to_be_visible()
-    expect(page.locator('iframe[title="st_keyup.st_keyup"]')).to_be_visible()
+    expect(page.get_by_role("link", name="Livros")).to_be_visible(timeout=30_000)
+    expect(page.locator('iframe[title="st_keyup.st_keyup"]')).to_be_visible(timeout=30_000)
     page.wait_for_load_state("networkidle")
 
 
@@ -158,3 +160,12 @@ def test_teclado_alcanca_menu_busca_e_filtro_com_foco_visivel(page: Page):
     assert all(v["contorno"] for v in links), links
     assert any(v["tag"] == "IFRAME" and "st_keyup" in v["titulo"] for v in vistos), vistos
     assert any(v["tag"] == "INPUT" and "categoria" in v["texto"].lower() for v in vistos), vistos
+
+
+def test_aviso_de_carregamento_aparece_e_some(page: Page):
+    page.goto(f"{URL_LENTO}/?p=Filme")
+    aviso = page.get_by_text("Carregando o catálogo…")
+    expect(aviso).to_be_visible(timeout=60_000)
+    page.screenshot(path=str(SAIDA / "carregamento.png"), full_page=True)
+    expect(page.get_by_text("15 títulos encontrados")).to_be_visible(timeout=60_000)
+    expect(aviso).to_have_count(0)

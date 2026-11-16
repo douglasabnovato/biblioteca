@@ -45,7 +45,7 @@ def buscar_item(item_id, db_path=DB_PATH):
         numero = int(str(item_id))
     except (TypeError, ValueError):
         return None
-    if numero < 1:
+    if not 1 <= numero <= 2**63 - 1:  # fora do inteiro do SQLite
         return None
     query = "SELECT id, titulo, descricao, imagem, tipo, categoria FROM itens WHERE id = ?"
     with conectar(db_path) as conn:
