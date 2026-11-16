@@ -13,6 +13,11 @@ jobs:
       - run: pip install -r requirements-dev.txt
       - run: python scripts/popular_banco.py
       - run: pytest -q
+      # Critério 9: os alertas do Dependabot estão desligados (API 403); a auditoria das dependências de produção roda aqui
+      - name: Auditar dependências (pip-audit)
+        run: |
+          pip install pip-audit==2.10.1
+          pip-audit -r requirements.txt
 
   # Fluxo principal e acessibilidade com o app no ar, num navegador real (issue #6)
   tela:

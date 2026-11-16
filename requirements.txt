@@ -1,2 +1,4 @@
-streamlit==1.64.0
+streamlit==1.67.0
 streamlit-keyup==0.3.0
+# Vem do Streamlit; a 12.x tem vulnerabilidades conhecidas (pip-audit, 15/11/2026), corrigidas na 13.0.0
+pillow>=13.0.0,<14
