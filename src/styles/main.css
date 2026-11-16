@@ -243,4 +243,46 @@ iframe[title="st_keyup.st_keyup"] {
 [data-testid="stWidgetLabel"], [data-testid="stWidgetLabel"] p, label {
     color: var(--text-muted) !important;
 }
+/* Título do card leva ao detalhe (#7): mesma cor do título, sublinhado ao passar o mouse */
+.card h3 a {
+    color: var(--text-main) !important;
+    text-decoration: none;
+}
+.card h3 a:hover {
+    text-decoration: underline;
+}
+/* Página de detalhe */
+.voltar a, .detalhe a {
+    color: #d1b3ff !important;
+    text-decoration: underline;
+}
+.detalhe {
+    display: grid;
+    grid-template-columns: minmax(0, 300px) 1fr;
+    gap: 24px;
+    align-items: start;
+    color: var(--text-main);
+}
+.detalhe .capa {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 2 / 3;
+}
+.detalhe dl {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 4px 12px;
+    margin: 0 0 16px;
+}
+.detalhe dt {
+    color: var(--text-muted);
+}
+.detalhe dd {
+    margin: 0;
+}
+@media (max-width: 768px) {
+    .detalhe {
+        grid-template-columns: 1fr;
+    }
+}
 /* Fim de main.css */

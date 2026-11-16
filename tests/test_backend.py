@@ -4,8 +4,8 @@ import json
 import pytest
 
 from scripts.popular_banco import carregar, popular
-from src.backend import buscar_dados, chave_obra, listar_categorias, normalizar, pares_adaptacao
-from src.render import card_html
+from src.backend import buscar_dados, buscar_item, chave_obra, listar_categorias, normalizar, pares_adaptacao
+from src.render import card_html, detalhe_html
 
 
 @pytest.fixture(scope="module")
@@ -81,3 +81,26 @@ def test_card_mostra_a_obra_no_outro_formato_com_escape():
     html_card = card_html(item, {"tipo": "Livro", "titulo": "<b>Y</b>"})
     assert "Também em livro: &lt;b&gt;Y&lt;/b&gt;" in html_card
     assert "Também em" not in card_html(item)
+
+
+def test_buscar_item_pelo_id_e_recusa_id_invalido(db):
+    duna = next(i for i in buscar_dados(db_path=db) if i["titulo"] == "Duna")
+    assert buscar_item(duna["id"], db_path=db) == duna
+    assert buscar_item(str(duna["id"]), db_path=db) == duna
+    for valor in (None, "", "abc", "0", "-1", "1 OR 1=1", "99999"):
+        assert buscar_item(valor, db_path=db) is None, valor
+
+
+def test_pares_adaptacao_traz_o_id_do_outro_formato(db):
+    itens = buscar_dados(db_path=db)
+    pares = pares_adaptacao(itens)
+    ids = {i["id"] for i in itens}
+    assert all(p["id"] in ids and p["id"] != chave for chave, p in pares.items())
+
+
+def test_detalhe_escapa_html_e_liga_o_outro_formato():
+    item = {"id": 1, "titulo": "<i>X</i>", "descricao": "<script>", "tipo": "Livro", "categoria": "Terror", "imagem": ""}
+    pagina = detalhe_html(item, {"id": 2, "tipo": "Filme", "titulo": "<b>Y</b>"})
+    assert "<script>" not in pagina and "&lt;script&gt;" in pagina
+    assert 'Também em filme: <a href="?p=item&amp;id=2" target="_self">&lt;b&gt;Y&lt;/b&gt;</a>' in pagina
+    assert "<dd>Livro</dd>" in pagina and "<dd>Terror</dd>" in pagina

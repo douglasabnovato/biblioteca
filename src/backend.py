@@ -39,6 +39,20 @@ def buscar_dados(tipo=None, categoria=None, busca=None, db_path=DB_PATH):
         return [dict(row) for row in conn.execute(query, params).fetchall()]
 
 
+def buscar_item(item_id, db_path=DB_PATH):
+    """Um título pelo id, para a página de detalhe; devolve None se o id for inválido ou não existir."""
+    try:
+        numero = int(str(item_id))
+    except (TypeError, ValueError):
+        return None
+    if numero < 1:
+        return None
+    query = "SELECT id, titulo, descricao, imagem, tipo, categoria FROM itens WHERE id = ?"
+    with conectar(db_path) as conn:
+        linha = conn.execute(query, (numero,)).fetchone()
+    return dict(linha) if linha else None
+
+
 def listar_categorias(tipo=None, db_path=DB_PATH):
     """Categorias existentes no catálogo (antes a lista ficava fixa no código)."""
     query = "SELECT DISTINCT categoria FROM itens"
@@ -67,6 +81,6 @@ def pares_adaptacao(itens):
         for item in grupo:
             outro = next((o for o in grupo if o["tipo"] != item["tipo"]), None)
             if outro:
-                pares[item["id"]] = {"tipo": outro["tipo"], "titulo": outro["titulo"]}
+                pares[item["id"]] = {"id": outro["id"], "tipo": outro["tipo"], "titulo": outro["titulo"]}
     return pares
 # Fim de backend.py

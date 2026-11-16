@@ -4,8 +4,8 @@ import html
 import streamlit as st
 from st_keyup import st_keyup
 
-from src.backend import buscar_dados, listar_categorias, pares_adaptacao
-from src.render import card_html
+from src.backend import buscar_dados, buscar_item, listar_categorias, pares_adaptacao
+from src.render import card_html, detalhe_html
 
 st.set_page_config(layout="wide", page_title="Cine&Livro", page_icon="🎬")
 
@@ -14,8 +14,6 @@ with open("src/styles/main.css", encoding="utf-8") as f:
 
 PAGINAS = {"Home": "Início", "Filme": "Filmes", "Livro": "Livros"}
 navegacao = st.query_params.get("p", "Home")
-if navegacao not in PAGINAS:
-    navegacao = "Home"
 
 
 @st.cache_data(ttl=600, show_spinner=False)
@@ -36,6 +34,26 @@ def categorias_de(tipo):
     return listar_categorias(tipo)
 
 
+@st.cache_data(ttl=600, show_spinner=False)
+def consultar_item(item_id):
+    """Um título pelo id, com cache."""
+    return buscar_item(item_id)
+
+
+# Página de detalhe (?p=item&id=N); id inválido ou inexistente volta para o Início com aviso (#7)
+detalhe = None
+aviso = None
+if navegacao == "item":
+    try:
+        detalhe = consultar_item(st.query_params.get("id", ""))
+    except Exception:
+        detalhe = None
+    if detalhe is None:
+        aviso = "Título não encontrado. Veja o catálogo completo abaixo."
+        navegacao = "Home"
+elif navegacao not in PAGINAS:
+    navegacao = "Home"
+
 ATUAL = 'aria-current="page"'
 links = "".join(
     f'<a href="?p={chave}" target="_self" {ATUAL if chave == navegacao else ""}>{rotulo}</a>'
@@ -43,7 +61,23 @@ links = "".join(
 )
 st.markdown(f'<nav class="nav-custom" aria-label="Principal">{links}</nav><div class="content-wrapper"></div>', unsafe_allow_html=True)
 
+if detalhe:
+    st.title(detalhe["titulo"], anchor=False)
+    pagina_tipo = detalhe["tipo"]
+    st.markdown(
+        f'<p class="voltar"><a href="?p={pagina_tipo}" target="_self">Voltar para {PAGINAS[pagina_tipo]}</a></p>',
+        unsafe_allow_html=True,
+    )
+    try:
+        par = adaptacoes().get(detalhe["id"])
+    except Exception:
+        par = None
+    st.markdown(detalhe_html(detalhe, par), unsafe_allow_html=True)
+    st.stop()
+
 st.title("Cine&Livro" if navegacao == "Home" else f"Cine&Livro — {PAGINAS[navegacao]}", anchor=False)
+if aviso:
+    st.warning(aviso)
 
 def campo_busca():
     """Busca em tempo real (st_keyup); se o componente não carregar, usa o campo padrão do Streamlit."""
