@@ -26,3 +26,4 @@ flowchart LR
 | ADR-02 | Função `normalizar` registrada no SQLite | Busca sem acento sem coluna extra | Coluna normalizada |
 | ADR-03 | Capas em data URI dentro do card | `st.image` não aceita texto alternativo | Servir `assets/` como estático |
 | ADR-04 | `itens.json` como fonte da verdade; `.db` gerado | Fácil de editar e revisar em PR | Editar o `.db` direto |
+| [ADR-05](adr/0005-aceitar-alertas-de-desenvolvimento.md) | Aceitar os alertas de desenvolvimento do Dependabot (`pytest`) | Ordem do responsável de 16/11/2026; o `pytest` não vai para o app no ar | Migrar para o pytest 9 (#20) |

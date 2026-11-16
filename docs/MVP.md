@@ -1,6 +1,6 @@
 # MVP — Cine&Livro
 
-> Fonte única do estado. Tabela atual de 16/11/2026 (ciclo de 15/11/2026). As tabelas anteriores estão em "Histórico", no fim.
+> Fonte única do estado. Tabela atual de 16/11/2026 (ciclo de 15/11/2026). Revisto em 16/11/2026, 14h38: critério 9 com a ADR-05 dos alertas de desenvolvimento. As tabelas anteriores estão em "Histórico", no fim.
 
 **Problema e público:** Quem busca o que ver ou ler encontra filmes e livros num único catálogo.
 
@@ -8,9 +8,9 @@
 
 **Nível:** N1 (estudo). Critérios 5 (medição) e 7 (LCP no ar) não se aplicam e saem da conta.
 
-**Resumo:** 9 de 10 aplicáveis atendidos
+**Resumo:** 10 de 10 aplicáveis atendidos
 
-**Finalizado:** sim. O único critério fora de "Atende" (9) depende do responsável e tem issue com `depende-do-responsavel` (#24).
+**Finalizado:** sim. Todos os critérios aplicáveis estão em "Atende". Os 2 alertas do Dependabot no `pytest` (só nos testes) estão aceitos na [ADR-05](adr/0005-aceitar-alertas-de-desenvolvimento.md); a migração para o pytest 9 segue em #20.
 
 O link publicado ainda pede login, porque o app está privado. Em N1 a hospedagem não é obrigatória, mas tornar o app público segue com o responsável (#4).
 
@@ -24,7 +24,7 @@ O link publicado ainda pede login, porque o app está privado. Em N1 a hospedage
 | 6 | Falhas tratadas | Erro, vazio e carregamento têm resposta | Atende: `pytest -q` em 16/11/2026, 24 passed (local e no CI). Banco indisponível mostra erro claro e lista vazia mostra aviso (`test_banco_indisponivel_mostra_erro_claro`, `test_lista_vazia_mostra_aviso`); id inválido volta ao Início com aviso. Carregamento: `pytest tela -v` no CI em 16/11/2026 ([run](https://github.com/douglasabnovato/biblioteca/actions/runs/43797732155)), `test_aviso_de_carregamento_aparece_e_some`: com a consulta atrasada em 2 s (`CINELIVRO_ATRASO_TESTE`, só no teste), "Carregando o catálogo…" aparece e some quando a lista chega (#18) |
 | 7 | Desempenho aceitável | LCP de até 2,5 s no celular | Não se aplica (N1) |
 | 8 | Acessibilidade básica | axe e teclado | Atende: `pytest tela -v` em 16/11/2026 ([run](https://github.com/douglasabnovato/biblioteca/actions/runs/43797732155)) e local, 13 passed. O axe-core dá **0 violações** em Início, Filmes, Livros e no detalhe, em 1366 px e com o catálogo real. O app tem um tema só, escuro e fixo (`base = "dark"` no `.streamlit/config.toml`), sem tema claro nem `prefers-color-scheme`; o teste roda também com o sistema em modo escuro só para provar que a tela não muda (antes sobrava a `region`, #11). O Tab alcança menu, busca e filtro com contorno de 3 px; Esc fecha o filtro e mantém o foco |
-| 9 | Segurança e conformidade | `pip-audit`, sem segredo, dados pessoais decididos | Parcial: `pip-audit -r requirements.txt` 0 (16/11/2026: "No known vulnerabilities found", local e no job `app`, depois de subir o Streamlit para 1.67.0 e o Pillow para 13); os alertas do Dependabot estão desligados (API 403) e a regra está em decisão na [engenharia#33](https://github.com/douglasabnovato/engenharia/issues/33). Ligar os alertas é do responsável (#24). Sem segredos nem dados pessoais; consulta parametrizada; HTML escapado |
+| 9 | Segurança e conformidade | `pip-audit`, sem segredo, dados pessoais decididos | Atende: `pip-audit -r requirements.txt` 0 (16/11/2026: "No known vulnerabilities found", no job `app` do CI; o `requirements.txt` é o único arquivo que o Streamlit Cloud instala). `gh api "repos/douglasabnovato/biblioteca/dependabot/alerts?state=open&per_page=100"` em 16/11/2026, 14h38: 2 abertos, 2 na [ADR-05](adr/0005-aceitar-alertas-de-desenvolvimento.md), 0 corrigidos e 0 sem decisão. Os dois são do `pytest` 8.4.2 (GHSA-6w46-j5rx-g56g, médio, escopo de desenvolvimento), em `requirements-dev.txt` e `requirements-tela.txt`; `grep -c pytest requirements.txt` devolve 0, então o aviso não chega ao app no ar. Sem segredos nem dados pessoais; consulta parametrizada; HTML escapado |
 | 10 | Entrega confiável | CI nos PRs e principal protegida | Atende: `gh api repos/douglasabnovato/biblioteca/rules/branches/main` em 16/11/2026: `deletion`, `non_fast_forward`, `pull_request` e `required_status_checks` (`app` e `tela`) |
 | 11 | Testes dos fluxos críticos | Testes automatizados no CI, sem `skipped` | Atende: no CI em 16/11/2026 ([run](https://github.com/douglasabnovato/biblioteca/actions/runs/43797732155)), `pytest -q` com 24 passed e `pytest tela -v` com 13 passed, nenhum pulado |
 | 12 | Documentação honesta | Qualquer pessoa roda o projeto | Atende: comandos do README conferidos em 16/11/2026 (`pip install`, `popular_banco.py`, `pytest`, `streamlit run`, `pytest tela`); o README não dá o link como no ar: `curl` em 16/11/2026 devolve 303 para o login |
@@ -43,6 +43,9 @@ O job `tela` do CI sobe o app com `streamlit run app.py` e roda `tela/test_tela.
 8. O axe-core roda em todas essas telas, sem nenhuma violação. O app não tem tema claro próprio: o tema é escuro e fixo, e a preferência do sistema não muda a tela.
 
 ## Histórico
+
+- 16/11/2026, 14h38: ordem do responsável ("Regra geral por ADR"). Os 2 alertas do `pytest` ficam aceitos na ADR-05, porque o `pytest` não vai para o app no ar. O critério 9 volta a "Atende"; Resumo de 9 para 10 de 10; Finalizado de "não" para "sim".
+- 16/11/2026: o responsável ligou os alertas do Dependabot (#24). A leitura das 12h01 deu 2 alertas do `pytest`, sem correção fora da versão 9. O critério 9 segue Parcial, agora por esses alertas (#27), e o Finalizado passou de "sim" para "não".
 
 ### Tabela de 09/11/2026 (ciclo de 07/11/2026)
 
