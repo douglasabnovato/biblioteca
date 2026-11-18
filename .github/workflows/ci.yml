@@ -27,7 +27,7 @@ jobs:
       - uses: actions/setup-python@v5
         with: { python-version: "3.12", cache: pip }
       - run: pip install -r requirements-tela.txt
-      - run: pip list | grep -i -E "^(playwright|pytest-playwright|axe-playwright-python|streamlit) "
+      - run: pip list | grep -i -E "^(playwright|pytest-playwright|axe[-_]playwright[-_]python|pytest|streamlit) "
       - run: python scripts/popular_banco.py
       - run: python -m playwright install --with-deps chromium
       - name: Subir o app

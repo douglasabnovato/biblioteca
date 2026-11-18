@@ -1,4 +1,6 @@
 # Teste de tela (navegador real + axe-core). Só no job "tela" do CI; ver tela/test_tela.py
+# Versões fixas para o resultado não mudar sem mudança no código (#21, 18/11/2026: as do CI de 16/11/2026)
 -r requirements-dev.txt
-pytest-playwright>=0.7
-axe-playwright-python>=0.1.4
+playwright==1.65.2
+pytest-playwright==0.10.0
+axe-playwright-python==0.1.8
