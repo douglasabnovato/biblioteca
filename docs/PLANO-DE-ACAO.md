@@ -18,6 +18,8 @@ Timebox: 30 min.
 
 - Título do card sem o link "Link to heading" no Tab (#19).
 - Versões do teste de tela fixas em `requirements-tela.txt` (#21), as mesmas do CI de 16/11/2026: playwright 1.65.2, pytest-playwright 0.10.0 e axe-playwright-python 0.1.8. O passo `pip list` do job `tela` mostra as instaladas.
+- pytest 8.4.2 → 9.2.0 (#20), que corrige o GHSA-6w46-j5rx-g56g; o job `app` audita também `requirements-dev.txt` e `requirements-tela.txt`. CI em 18/11/2026: 24 e 13 passed, 0 vulnerabilidades nos três arquivos.
+- Ficam como próximos passos: #19 (até a `main`), #22 (capas) e #23 (`streamlit-keyup` 1.0). #8 fechada como não planejada: não melhora critério aplicável em N1.
 
 ## Ciclo de 15/11/2026
 

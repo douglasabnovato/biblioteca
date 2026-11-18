@@ -1,6 +1,6 @@
 # ADR-05: Aceitar os alertas de desenvolvimento do Dependabot
 
-- **Status:** Aceita
+- **Status:** Aceita; a substituir quando a `main` receber o pytest 9.2.0 (#20, na `feature/2026-11-18` desde 18/11/2026)
 - **Data:** 16/11/2026
 - **Origem:** ordem do responsável repassada pelo DG líder em 16/11/2026:
 
