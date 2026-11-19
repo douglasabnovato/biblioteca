@@ -40,8 +40,11 @@ def card_html(item, par=None):
         formato = "livro" if par.get("tipo") == "Livro" else "filme"
         extra = f'<p class="adaptacao">Também em {formato}: {html.escape(str(par.get("titulo", "")))}</p>'
     nome = link_detalhe(item.get("id"), titulo) if item.get("id") is not None else titulo
+    # Título com role="heading" em vez de <h3>: o st.markdown põe um link "Link to heading" em todo h1-h6,
+    # e eram 30 paradas a mais no Tab (#19)
     return (
-        f'<article class="card">{capa}<div><h3>{nome}</h3><p>{descricao}</p>{extra}</div>'
+        f'<article class="card">{capa}<div><div class="titulo-card" role="heading" aria-level="3">{nome}</div>'
+        f'<p>{descricao}</p>{extra}</div>'
         f'<span class="{classe}">{tipo}</span></article>'
     )
 

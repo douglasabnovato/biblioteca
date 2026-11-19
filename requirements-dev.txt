@@ -1,2 +1,3 @@
 -r requirements.txt
-pytest==8.4.2
+# 9.0.3 corrige GHSA-6w46-j5rx-g56g (tmpdir); 9.2.0 em 18/11/2026 (#20)
+pytest==9.2.0

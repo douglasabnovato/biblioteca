@@ -120,7 +120,7 @@ div[data-baseweb="select"] > div {
     border-color: var(--border-glow);
 }
 
-.card h3 {
+.card .titulo-card {
     font-size: 1.15rem;
     color: var(--text-main);
     margin-bottom: 8px;
@@ -244,11 +244,11 @@ iframe[title="st_keyup.st_keyup"] {
     color: var(--text-muted) !important;
 }
 /* Título do card leva ao detalhe (#7): mesma cor do título, sublinhado ao passar o mouse */
-.card h3 a {
+.card .titulo-card a {
     color: var(--text-main) !important;
     text-decoration: none;
 }
-.card h3 a:hover {
+.card .titulo-card a:hover {
     text-decoration: underline;
 }
 /* Página de detalhe */
