@@ -86,7 +86,12 @@ def test_detalhe_com_id_inexistente_ou_invalido_volta_para_o_inicio_com_aviso():
 def test_card_da_home_leva_ao_detalhe():
     at = rodar()
     textos = " ".join(m.value for m in at.markdown)
-    assert f'<h3><a href="?p=item&amp;id={id_de("Duna")}" target="_self">Duna</a></h3>' in textos
+    assert (
+        f'<div class="titulo-card" role="heading" aria-level="3">'
+        f'<a href="?p=item&amp;id={id_de("Duna")}" target="_self">Duna</a></div>'
+    ) in textos
+    # Sem <h3> no card: o Streamlit poria um link "Link to heading" em cada título (#19)
+    assert "<h3>" not in textos
 
 
 # Os dois testes abaixo trocam src.backend.buscar_dados. Isso funciona porque o app.py refaz

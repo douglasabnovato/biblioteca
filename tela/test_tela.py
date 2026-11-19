@@ -6,6 +6,7 @@ Fica fora de `testpaths` de propósito: sem o app no ar, falha em vez de ser pul
 """
 import json
 import os
+import re
 from pathlib import Path
 
 import pytest
@@ -71,7 +72,7 @@ def test_axe_sem_violacao(page: Page, p: str, tema: str):
 def test_detalhe_abre_pelo_card_sem_violacao(page: Page, tema: str):
     page.set_viewport_size({"width": 1366, "height": 900})
     abrir(page, "Home", tema)
-    page.locator(".card h3 a", has_text="Percy Jackson e O Ladrão de Raios").click()
+    page.locator(".card .titulo-card a", has_text="Percy Jackson e O Ladrão de Raios").click()
     expect(page.get_by_role("heading", level=1, name="Percy Jackson e O Ladrão de Raios")).to_be_visible(timeout=60_000)
     expect(page.get_by_text("Também em livro")).to_be_visible()
     resumo = rodar_axe(page, f"detalhe-{tema}")
@@ -110,8 +111,8 @@ def test_fluxo_principal_busca_e_filtro(page: Page):
     campo.press_sequentially("Duna", delay=80)
     # A Home começa com 30 títulos: a busca precisa reduzir a lista e tirar o que não é Duna
     expect(page.get_by_text("30 títulos encontrados")).to_have_count(0, timeout=30_000)
-    expect(page.locator(".card h3", has_text="Interestelar")).to_have_count(0)
-    expect(page.locator(".card h3", has_text="Duna").first).to_be_visible()
+    expect(page.locator(".card .titulo-card", has_text="Interestelar")).to_have_count(0)
+    expect(page.locator(".card .titulo-card", has_text="Duna").first).to_be_visible()
     page.screenshot(path=str(SAIDA / "fluxo-1-busca.png"), full_page=True)
     # 2. Menu leva para Livros, com o item atual marcado
     page.get_by_role("link", name="Livros").click()
@@ -160,6 +161,11 @@ def test_teclado_alcanca_menu_busca_e_filtro_com_foco_visivel(page: Page):
     assert all(v["contorno"] for v in links), links
     assert any(v["tag"] == "IFRAME" and "st_keyup" in v["titulo"] for v in vistos), vistos
     assert any(v["tag"] == "INPUT" and "categoria" in v["texto"].lower() for v in vistos), vistos
+    # Os cards não têm âncora de título: nenhuma parada "Link to heading" no Tab (#19)
+    assert not any("link to heading" in v["texto"].lower() for v in vistos), vistos
+    expect(page.locator('.card a[href^="#"]')).to_have_count(0)
+    # O título do card continua levando ao detalhe
+    expect(page.locator(".card .titulo-card a").first).to_have_attribute("href", re.compile(r"\?p=item&id=\d+"))
 
 
 def test_aviso_de_carregamento_aparece_e_some(page: Page):

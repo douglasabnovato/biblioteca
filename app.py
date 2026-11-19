@@ -117,7 +117,7 @@ if itens:
     for item in itens:
         grupos.setdefault(item["categoria"], []).append(item)
     for categoria, lista in grupos.items():
-        # h2 por categoria (o título da obra no card é h3) e sem âncora, para não somar paradas no Tab
+        # h2 por categoria (o título da obra no card tem role="heading" nível 3) e sem âncora, para não somar paradas no Tab
         st.header(categoria, anchor=False)
         for i in range(0, len(lista), 3):
             cols = st.columns(3)

@@ -18,6 +18,9 @@ jobs:
         run: |
           pip install pip-audit==2.10.1
           pip-audit -r requirements.txt
+          # Também as ferramentas de teste (#20): antes, o pytest 8.4.2 tinha alerta só aqui
+          pip-audit -r requirements-dev.txt
+          pip-audit -r requirements-tela.txt
 
   # Fluxo principal e acessibilidade com o app no ar, num navegador real (issue #6)
   tela:
@@ -27,7 +30,7 @@ jobs:
       - uses: actions/setup-python@v5
         with: { python-version: "3.12", cache: pip }
       - run: pip install -r requirements-tela.txt
-      - run: pip list | grep -i -E "^(playwright|pytest-playwright|axe-playwright-python|streamlit) "
+      - run: pip list | grep -i -E "^(playwright|pytest-playwright|axe[-_]playwright[-_]python|pytest|streamlit) "
       - run: python scripts/popular_banco.py
       - run: python -m playwright install --with-deps chromium
       - name: Subir o app

@@ -12,6 +12,15 @@ Timebox: 30 min.
 | Could | Página de detalhe com sinopse longa e onde assistir/comprar | Alto | Médio | Próximo ciclo |
 | Could | Rodapé e CTA (itens do README) | Baixo | Baixo | Próximo ciclo |
 
+## Ciclo de 18/11/2026
+
+> Branch `feature/2026-11-18` → `developer/sprint-2026-11-19` → `main`. Nível: N1. Triagem das issues pela regra de 18/11/2026 da engenharia.
+
+- Título do card sem o link "Link to heading" no Tab (#19).
+- Versões do teste de tela fixas em `requirements-tela.txt` (#21), as mesmas do CI de 16/11/2026: playwright 1.65.2, pytest-playwright 0.10.0 e axe-playwright-python 0.1.8. O passo `pip list` do job `tela` mostra as instaladas.
+- pytest 8.4.2 → 9.2.0 (#20), que corrige o GHSA-6w46-j5rx-g56g; o job `app` audita também `requirements-dev.txt` e `requirements-tela.txt`. CI em 18/11/2026: 24 e 13 passed, 0 vulnerabilidades nos três arquivos.
+- Ficam como próximos passos: #19 (até a `main`), #22 (capas) e #23 (`streamlit-keyup` 1.0). #8 fechada como não planejada: não melhora critério aplicável em N1.
+
 ## Ciclo de 15/11/2026
 
 > Executado em 15 e 16/11/2026. Branch `feature/2026-11-15` → `developer/sprint-2026-11-12` → `main`. O PR da sprint para a `main` (#15) segue aberto com o responsável. Nível: N1.
@@ -99,7 +108,7 @@ Timebox: 30 min.
 
 **Riscos.**
 - O Streamlit desenha a tela em partes: o teste espera o menu e a busca aparecerem antes de usar o teclado, e espera sobrar um título só depois do filtro.
-- Versões do Playwright e do axe no job `tela` não estão fixas (`>=`); o log do CI registra as instaladas (playwright 1.64.1, pytest-playwright 0.10.0).
+- Versões do Playwright e do axe no job `tela` não estão fixas (`>=`); o log do CI registra as instaladas (playwright 1.64.1, pytest-playwright 0.10.0). Fixadas em 18/11/2026 (#21).
 
 **Definição de pronto.** Jobs `app` e `tela` verdes no PR; `docs/MVP.md` e README atualizados.
 
