@@ -1,8 +1,8 @@
-> **Projeto de estudo (N1).** Estado conferido em 16/11/2026. Critérios em [docs/MVP.md](docs/MVP.md).
+> **Projeto de estudo (N1).** **O link do app ainda não abre para o público:** em 24/11/2026, https://biblioteca-cine-livros.streamlit.app/ respondeu HTTP 303 e levou ao login do Streamlit, porque o app está privado ([#4](https://github.com/douglasabnovato/biblioteca/issues/4), do responsável). Para ver o catálogo agora, rode localmente (seção "Como executar"). Critérios em [docs/MVP.md](docs/MVP.md).
 
 ## Estado e próximos passos (ciclo de 15/11/2026)
 
-Sem link publicado que responda: em 16/11/2026, https://biblioteca-cine-livros.streamlit.app/ responde HTTP 303 e redireciona para o login do Streamlit, porque o app está privado. Tornar público é do responsável ([#4](https://github.com/douglasabnovato/biblioteca/issues/4)); o passo a passo está em [docs/DEPLOY.md](docs/DEPLOY.md). Para ver o catálogo, rode localmente (seção "Como executar").
+Sem link publicado que responda: em 16/11/2026 e de novo em 24/11/2026, https://biblioteca-cine-livros.streamlit.app/ responde HTTP 303 e redireciona para o login do Streamlit, porque o app está privado. Tornar público é do responsável ([#4](https://github.com/douglasabnovato/biblioteca/issues/4)); o passo a passo está em [docs/DEPLOY.md](docs/DEPLOY.md). Para ver o catálogo, rode localmente (seção "Como executar").
 
 **Finalizado: sim**, com 10 de 10 critérios aplicáveis atendidos. Os alertas do Dependabot estão ligados: em 16/11/2026, 14h38, havia 2 abertos, os dois do `pytest` 8.4.2, que só roda nos testes e não vai para o app no ar. Eles estão aceitos na [ADR-05](docs/adr/0005-aceitar-alertas-de-desenvolvimento.md), por ordem do responsável; o pytest 9.2.0, que corrige o aviso, está na branch `feature/2026-11-18` e espera a `main` ([#20](https://github.com/douglasabnovato/biblioteca/issues/20)). A `main` está protegida (exige PR e os jobs `app` e `tela` verdes).
 
